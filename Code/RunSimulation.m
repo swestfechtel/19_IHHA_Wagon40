@@ -1,6 +1,12 @@
 %% Initialise
 clear all, close all, clc
-m = 90000; %Masse
+
+%% Vars
+m = 90000; % Masse
+v0 = 100/3.6; % Ausgangsgeschwindigkeit
+
+%% Constants
+
 Fb = -1*m; %?
 RBD = 5; %Regelbetriebsdruck
 VBD = 3.5; %Vollbremsdruck
@@ -23,7 +29,6 @@ tl = .1; %?
 %wheel/rail surface
 %?
 
-v0 = 100/3.6; %Ausgangsgeschwindigkeit
 p0 = 0; %Ausgangsdruck?
 s0 = 0; %?
 Pres = 0/1000*[5.7/771 0 1.6]; %Strahl formula for m/s velocity
@@ -32,7 +37,6 @@ alpha = 0.9; %?
 
 BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
-
 
 %% Run Simulation
 tmax = 100;
@@ -45,6 +49,19 @@ simin.signals.values = u;%[-300*ones(nmax,1)];
 
 
 sim('Simulation.slx')
+V = [velocity.Time, velocity.Data];
+V1 = [velocity1.Time, velocity1.Data];
+F = [force.Time, force.Data];
+F1 = [force1.Time, force1.Data];
+P = [pressure.Time, pressure.Data];
+P1 = [pressure1.Time, pressure1.Data];
+writematrix(V,'Velocity.csv');
+writematrix(V1,'Velocity1.csv');
+writematrix(F,'Force.csv');
+writematrix(F1,'Force1.csv');
+writematrix(P,'Pressure.csv');
+writematrix(P1,'Pressure1.csv');
+
 %% Plot
 close all
 tplot = force.Time;
