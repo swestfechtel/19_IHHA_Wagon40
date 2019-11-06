@@ -103,7 +103,7 @@ xlabel('t/s')
 legend(legendstring)
 
 subplot(2,1,2)
-plot(tplot,velocity1.Data(:,1:step:Nwagon));
+plot(tplot,velocity.Data(:,1:step:Nwagon));
 ylabel('v/m/s')
 xlabel('t/s')
 legend(legendstring)
