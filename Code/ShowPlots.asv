@@ -64,10 +64,7 @@ subplot(323)
 plot(tplot,acceleration.Data(:,1:step:Nwagon));
 ylabel('a [m/s^{2}]')
 xlabel('t [s]')
-legend(legendstring)
 
 subplot(324)
 plot(tplot,traveldistance.Data(:,1:step:Nwagon));
-ylabel('s [m]')
-xlabel('t [s]')
-legend(legendstring)
+ylabel('

@@ -4,6 +4,8 @@ clear all, close all, clc
 %% Vars
 m = 90000; % Masse
 v0 = 100/3.6; % Ausgangsgeschwindigkeit
+efficiency = 0.95; % efficiency of braking force generation
+trackgradient = 0; % Steigung/Gefaelle der Stecke
 
 %% Constants
 
