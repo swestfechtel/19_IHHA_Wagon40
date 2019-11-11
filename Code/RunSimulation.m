@@ -42,10 +42,10 @@ BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
 
 %% Run Simulation
-tmax = 400;
-nmax = 800;
+tmax = 100;
+nmax = 200;
 t = linspace(0, tmax, nmax);
-u = [5*ones(nmax/8,1); 3.5*ones(nmax/8,1); 3.5*ones(2*nmax/8,1); 5*ones(4*nmax/8,1)];
+u = [5*ones(nmax/4,1); 3.5*ones(nmax/4,1); 5*ones(2*nmax/4,1)];
 %u = [5*ones(nmax/4,1); 3.5*ones(3*nmax/4,1)];
 simin.time = t;
 simin.signals.values = u;%[-300*ones(nmax,1)];
