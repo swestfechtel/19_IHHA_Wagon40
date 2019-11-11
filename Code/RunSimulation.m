@@ -42,13 +42,17 @@ BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
 
 %% Run Simulation
-tmax = 100;
-nmax = 200;
+tmax = 200;
+nmax = 400;
 t = linspace(0, tmax, nmax);
-u = [5*ones(nmax/4,1); 3.5*ones(nmax/4,1); 5*ones(2*nmax/4,1)];
+u = [5*ones(8*nmax/40,1); 3.5*ones(24*nmax/40,1); 5*ones(8*nmax/40,1)];
+f = [m*ones(8*nmax/40,1); 0*ones(24*nmax/40,1); m*ones(4*nmax/40,1); 0*ones(4*nmax/40,1)];
 %u = [5*ones(nmax/4,1); 3.5*ones(3*nmax/4,1)];
 simin.time = t;
 simin.signals.values = u;%[-300*ones(nmax,1)];
+
+simin1.time = t;
+simin1.signals.values = f;
 
 
 sim('Simulation.slx')
