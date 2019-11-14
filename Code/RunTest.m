@@ -7,6 +7,7 @@ v0 = 100/3.6; % Ausgangsgeschwindigkeit
 efficiency = 0.95; % efficiency of braking force generation
 trackgradient = 0; % Steigung/Gefaelle der Stecke
 trainpower = m; % Zughakenleistung
+fc = 0.45;
 
 %% Constants
 
@@ -42,28 +43,15 @@ BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
 
 %% Run Simulation
-tmax = 200;
-nmax = 400;
+tmax = 10*6*60;
+nmax = tmax*2;
 t = linspace(0, tmax, nmax);
-u = [5*ones(8*nmax/40,1); 3.5*ones(24*nmax/40,1); 5*ones(8*nmax/40,1)];
-f = [m*ones(8*nmax/40,1); 0*ones(24*nmax/40,1); m*ones(4*nmax/40,1); 0*ones(4*nmax/40,1)];
-%u = [5*ones(nmax/4,1); 3.5*ones(3*nmax/4,1)];
+%u = [27*ones(nmax/4,1); 26; 25; 24; 23; 22; 21*ones(nmax/4,1); 22; 23; 24; 25; 26;];
+u1 = linspace(0, 27, nmax/2);
+u2 = linspace(27, 0, nmax/2);
+u = [u1, u2];
+u = u';
 simin.time = t;
-simin.signals.values = u;%[-300*ones(nmax,1)];
+simin.signals.values = u;
 
-simin1.time = t;
-simin1.signals.values = f;
-
-sim('Simulation.slx')
-V = [velocity.Time, velocity.Data];
-V1 = [velocity1.Time, velocity1.Data];
-F = [force.Time, force.Data];
-F1 = [force1.Time, force1.Data];
-P = [pressure.Time, pressure.Data];
-P1 = [pressure1.Time, pressure1.Data];
-writematrix(V,'Velocity.csv');
-writematrix(V1,'Velocity1.csv');
-writematrix(F,'Force.csv');
-writematrix(F1,'Force1.csv');
-writematrix(P,'Pressure.csv');
-writematrix(P1,'Pressure1.csv');
+sim('Simulation_v2.slx')
