@@ -1,12 +1,13 @@
 %% Initialise
-clear all, close all, clc
+%clear all, close all, clc
+clc
 
 %% Vars
 m = 90000; % Masse
-v0 = 100/3.6; % Ausgangsgeschwindigkeit
+%v0 = 100/3.6; % Ausgangsgeschwindigkeit
 efficiency = 0.95; % efficiency of braking force generation
 trackgradient = 0; % Steigung/Gefaelle der Stecke
-trainpower = m; % Zughakenleistung
+Ft = 360000;
 fc = 0.45;
 
 %% Constants
@@ -43,14 +44,11 @@ BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
 
 %% Run Simulation
-tmax = 10*6*60;
-nmax = tmax*2;
-t = linspace(0, tmax, nmax);
+%tmax = 2685/2;
+%nmax = tmax*2;
+%t = linspace(0, tmax, nmax);
 %u = [27*ones(nmax/4,1); 26; 25; 24; 23; 22; 21*ones(nmax/4,1); 22; 23; 24; 25; 26;];
-u1 = linspace(0, 27, nmax/2);
-u2 = linspace(27, 0, nmax/2);
-u = [u1, u2];
-u = u';
+tmax = 200;
 simin.time = t;
 simin.signals.values = u;
 
