@@ -1,5 +1,6 @@
 %% Initialise
 %clear all, close all, clc
+clear all
 clc
 
 %% Vars
@@ -44,11 +45,10 @@ BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
 
 %% Run Simulation
-%tmax = 2685/2;
-%nmax = tmax*2;
-%t = linspace(0, tmax, nmax);
-%u = [27*ones(nmax/4,1); 26; 25; 24; 23; 22; 21*ones(nmax/4,1); 22; 23; 24; 25; 26;];
-tmax = 200;
+tmax = 3600;
+nmax = tmax * 2;
+t = linspace(0, tmax, nmax);
+u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 22*ones(1000*2,1)];
 simin.time = t;
 simin.signals.values = u;
 
