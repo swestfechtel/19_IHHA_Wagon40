@@ -2,18 +2,10 @@
 %clear all, close all, clc
 clear all
 clc
-
-%% Vars
-m = 90000; % Masse
-%v0 = 100/3.6; % Ausgangsgeschwindigkeit
-efficiency = 0.95; % efficiency of braking force generation
-trackgradient = 0; % Steigung/Gefaelle der Stecke
-Ft = 360000;
-fc = 0.45;
+warning ('off','all');
 
 %% Constants
 
-Fb = -1*m; %?
 RBD = 5; %Regelbetriebsdruck
 VBD = 3.5; %Vollbremsdruck
 %Brake pipe
@@ -44,7 +36,7 @@ alpha = 0.9; %?
 BPnum = [0.3 alpha]; %?
 BPden = [1 alpha]; %?
 
-%% Run Simulation
+%% Simulation input
 tmax = 3600;
 nmax = tmax * 2;
 t = linspace(0, tmax, nmax);
@@ -52,4 +44,20 @@ u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 22*
 simin.time = t;
 simin.signals.values = u;
 
-sim('Simulation_v2.slx')
+%% Vars
+m = 90000; % Masse
+%v0 = 100/3.6; % Ausgangsgeschwindigkeit
+%efficiency = 0.95; % efficiency of braking force generation
+trackgradient = 0; % Steigung/Gefaelle der Stecke
+Ft = 360000;
+fc = 0.45;
+Fb = -1*m; %?
+
+mkdir output;
+for efficiency = 0.01:0.01:1
+    sim('Simulation_v2.slx')
+    name = strcat('effi',num2str(efficiency));
+    WriteOutput(name,velocity,force,pressure,distance,acceleration_neg);
+    fprintf('Run %s complete.\n', name);
+end
+%% Run
