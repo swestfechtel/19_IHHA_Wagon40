@@ -44,6 +44,7 @@ u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 22*
 simin.time = t;
 simin.signals.values = u;
 
+
 %% Vars
 m = 90000; % Masse
 %v0 = 100/3.6; % Ausgangsgeschwindigkeit
@@ -57,7 +58,7 @@ mkdir output;
 for i = 1:1:1
     sim('Simulation_v2.slx')
     name = strcat('run',num2str(i));
-    WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids);
+    WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u);
     fprintf('Run %s complete.\n', name);
 end
 %% Run

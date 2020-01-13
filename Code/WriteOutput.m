@@ -1,9 +1,11 @@
-function ret = WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,meta)
+function ret = WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u)
     V = [velocity.Time, velocity.Data];
     F = [force.Time, force.Data];
     P = [pressure.Time, pressure.Data];
     D = [distance.Time, distance.Data];
     A = [acceleration_neg.Time, acceleration_neg.Data];
+    t = transpose(t);
+    output = [t, u];
     mkdir(strcat('output/',name));
     dir = strcat('output/',name);
     writematrix(V,strcat(dir,'/Velocity.csv'));
@@ -11,6 +13,7 @@ function ret = WriteOutput(name,velocity,force,pressure,distance,acceleration_ne
     writematrix(P,strcat(dir,'/Pressure.csv'));
     writematrix(D,strcat(dir,'/Distance.csv'));
     writematrix(A,strcat(dir,'/Acceleration_neg.csv'));
-    writematrix(meta,strcat(dir,'/meta.csv'));
+    writematrix(ids,strcat(dir,'/ids.csv'));
+    writematrix(output,strcat(dir,'/input.csv'));
     ret = 1;
 end
