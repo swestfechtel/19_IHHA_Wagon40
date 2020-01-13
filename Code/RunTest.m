@@ -52,12 +52,12 @@ trackgradient = 0; % Steigung/Gefaelle der Stecke
 Ft = 360000;
 fc = 0.45;
 Fb = -1*m; %?
-
+pool = readmatrix('pool.csv');
 mkdir output;
-for efficiency = 0.01:0.01:1
+for i = 1:1:1
     sim('Simulation_v2.slx')
-    name = strcat('effi',num2str(efficiency));
-    WriteOutput(name,velocity,force,pressure,distance,acceleration_neg);
+    name = strcat('run',num2str(i));
+    WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids);
     fprintf('Run %s complete.\n', name);
 end
 %% Run

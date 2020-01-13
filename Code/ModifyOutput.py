@@ -13,7 +13,7 @@ def generate_header(path):
     tmp = pandas.read_csv(path)
     col_cnt = tmp.shape[1]
     line = 'Timestamp'
-    for i in range(col_cnt):
+    for i in range(col_cnt - 1):
         line += f",Wagon {i}"
 
     return line

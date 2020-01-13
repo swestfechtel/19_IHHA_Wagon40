@@ -1,7 +1,7 @@
 import pandas
 import matplotlib.pyplot as plt
 
-tmp = pandas.read_csv('output/effi0.6/Force.csv')
+tmp = pandas.read_csv('output/effi0.95/Force.csv')
 df = tmp.set_index('Timestamp')
 
 print(df.shape)
