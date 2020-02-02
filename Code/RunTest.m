@@ -28,7 +28,7 @@ tl = .1; %?
 %?
 
 p0 = 0; %Ausgangsdruck?
-s0 = 0; %?
+%s0 = 0; %?
 Pres = 0/1000*[5.7/771 0 1.6]; %Strahl formula for m/s velocity
 
 alpha = 0.9; %?
