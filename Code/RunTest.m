@@ -50,16 +50,21 @@ simin.signals.values = u;
 %v0 = 100/3.6; % Ausgangsgeschwindigkeit
 %efficiency = 0.95; % efficiency of braking force generation
 trackgradient = 0; % Steigung/Gefaelle der Stecke
-Ft = 360000; % traction force
-fc = 0.45;
+%Ft = 360000; % traction force
+%fc = 0.45;
 % Fb = -1*m; %?
 pool = readmatrix('pool.csv');
-num_wagons = 10;
+% num_wagons = 10;
 mkdir output;
-for i = 1:1:2
-    sim('Simulation_v2.slx')
-    name = strcat('run',num2str(i));
-    WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u,trackgradient,Ft,fc);
-    fprintf('Run %s complete.\n', name);
+for i = 1:1:40
+	num_wagons = i;
+	for j = 0.05:0.01:0.78
+		fc = j;
+		for k = 200000:1000:400000
+			Ft = k;
+			sim('Simulation_v2.slx')
+			name = strcat('run',num2str(i));
+			WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u,trackgradient,Ft,fc);
+			fprintf('Run %s complete.\n', name);
 end
 %% Run
