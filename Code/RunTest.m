@@ -58,14 +58,14 @@ pool = readmatrix('pool.csv');
 mkdir output;
 for i = 1:1:40
 	num_wagons = i;
-	name = strcat('wagons',num2str(i));
+	name_wagons = strcat('wagons',num2str(i));
 	for j = 0.05:0.01:0.78
 		fc = j;
-		name = strcat(name,'fc',num2str(j));
+		name_fc = strcat('fc',num2str(j));
 		for k = 200000:1000:400000
 			Ft = k;
 			sim('Simulation_v2.slx')
-			name = strcat(name,'ft',num2str(k));
+			name = strcat(name_wagons,name_fc,'ft',num2str(k));
 			WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u,trackgradient,Ft,fc);
 			fprintf('Run %s complete.\n', name);
 		end
