@@ -56,19 +56,65 @@ trackgradient = 0; % Steigung/Gefaelle der Stecke
 pool = readmatrix('pool.csv');
 % num_wagons = 10;
 mkdir output;
-for i = 1:1:40
-	num_wagons = i;
-	name_wagons = strcat('wagons',num2str(i));
-	for j = 0.05:0.01:0.78
-		fc = j;
-		name_fc = strcat('fc',num2str(j));
-		for k = 200000:1000:400000
-			Ft = k;
-			sim('Simulation_v2.slx')
-			name = strcat(name_wagons,name_fc,'ft',num2str(k));
-			WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u,trackgradient,Ft,fc);
-			fprintf('Run %s complete.\n', name);
-		end
-	end
+% for i = 1:1:40
+% 	num_wagons = i;
+% 	name_wagons = strcat('wagons',num2str(i));
+% 	for j = 0.05:0.01:0.78
+% 		fc = j;
+% 		name_fc = strcat('fc',num2str(j));
+% 		for k = 200000:1000:400000
+% 			Ft = k;
+% 			sim('Simulation_v2.slx');
+% 			name = strcat(name_wagons,name_fc,'ft',num2str(k));
+% 			WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u,trackgradient,Ft,fc);
+% 			fprintf('Run %s complete.\n', name);
+% 		end
+% 	end
+% end
+wagons = 1:1:40;
+friction = 0.05:0.01:0.78;
+tracforce = 200000:1000:400000;
+track = 1;
+for i = length(wagons):-1:1
+    for j = length(friction):-1:1
+        for k = length(tracforce):-1:1
+            in(track) = Simulink.SimulationInput('Simulation_v2');
+            in(track) = in(track).setVariable('num_wagons',wagons(i));
+            in(track) = in(track).setVariable('fc',friction(j));
+            in(track) = in(track).setVariable('Ft',tracforce(k));
+            
+            in(track) = in(track).setVariable('alpha',alpha);
+            in(track) = in(track).setVariable('BPden',BPden);
+            in(track) = in(track).setVariable('BPnum',BPnum);
+            in(track) = in(track).setVariable('c',c);
+            in(track) = in(track).setVariable('l',l);
+            in(track) = in(track).setVariable('nmax',nmax);
+            in(track) = in(track).setVariable('p0',p0);
+            in(track) = in(track).setVariable('pool',pool);
+            in(track) = in(track).setVariable('Pres',Pres);
+            in(track) = in(track).setVariable('RBD',RBD);
+            in(track) = in(track).setVariable('simin',simin);
+            in(track) = in(track).setVariable('t',t);
+            in(track) = in(track).setVariable('tf',tf);
+            in(track) = in(track).setVariable('tl',tl);
+            in(track) = in(track).setVariable('tmax',tmax);
+            in(track) = in(track).setVariable('trackgradient',trackgradient);
+            in(track) = in(track).setVariable('u',u);
+            in(track) = in(track).setVariable('VBD',VBD);
+            
+            Ft(track) = tracforce(k);
+            fc(track) = friction(j);
+            
+            track = track + 1;
+            fprintf('Run %i complete.\n',track);
+        end
+    end
 end
+out = parsim(in,'ShowProgress','on');
+
+for i = 1:1:length(out)
+    name = strcat('run',num2str(i));
+    WriteOutput(name,out(i).get('velocity'),out(i).get('force'),out(i).get('pressure'),out(i).get('distance'),out(i).get('acceleration_neg'),out(i).get('ids'),t,u,trackgradient,meta(i)(1),meta(i)(2));
+end
+
 %% Run
