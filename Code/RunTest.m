@@ -72,7 +72,8 @@ mkdir output;
 % 	end
 % end
 wagons = 1:1:40;
-friction = 0.05:0.01:0.78;
+%friction = 0.05:0.01:0.78;
+friction = 0.45:0.01:0.46;
 tracforce = 200000:1000:400000;
 track = 1;
 for i = length(wagons):-1:1
@@ -110,11 +111,18 @@ for i = length(wagons):-1:1
         end
     end
 end
+
+myCluster = parcluster('local');
+myCluster.NumWorkers = 30;
+saveProfile(myCluster);
+myCluster
+
+parpool(30);
 out = parsim(in,'ShowProgress','on');
 
 for i = 1:1:length(out)
     name = strcat('run',num2str(i));
-    WriteOutput(name,out(i).get('velocity'),out(i).get('force'),out(i).get('pressure'),out(i).get('distance'),out(i).get('acceleration_neg'),out(i).get('ids'),t,u,trackgradient,meta(i)(1),meta(i)(2));
+    WriteOutput(name,out(i).get('velocity'),out(i).get('force'),out(i).get('pressure'),out(i).get('distance'),out(i).get('acceleration_neg'),out(i).get('ids'),t,u,trackgradient,Ft(i),fc(i));
 end
 
 %% Run
