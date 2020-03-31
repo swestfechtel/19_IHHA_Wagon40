@@ -6,12 +6,12 @@
 \section{Initial Model}
 \label{sec:InitialModel}
 \par\noindent
-The initial model to be expanded upon describes a single braking process. Let's take a look at the whole model first. 
+The initial model to be expanded upon describes a single braking process. It's sole input, apart from some constants, is pressure over time, meaning a distinct value ranging between 5 and 3.5 bar for every timestamp. For visualization, please refer to \ref{fig:initmodel_siminput}. Let's take a look at the whole model first. 
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/initmodel_whole}
-	\caption{Initial model}
+	\caption{Initial Model}
 	\label{fig:initmodel_whole}
 \end{figure}
 
@@ -21,7 +21,7 @@ Here we see a model of a freight train of fixed length, consisting of 40 wagons,
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/initmodel_wagon}
-	\caption{Initial model - Wagon}
+	\caption{Initial Model - Wagon}
 	\label{fig:initmodel_wagon}
 \end{figure}
 
@@ -32,6 +32,41 @@ In the upper left corner is the input, which is the current pressure in the brak
 
 \section{Model Expansion}
 \label{sec:ModelExpansion}
+
+\par\noindent
+This initial model is however not of sufficient detail. Where it merely describes one single braking process, we need to simulate a whole ride, with alternating phases of braking and accelerating. For that purpose, the simulation input has to be adjusted accordingly. Where previously it was only one braking process, using braking pressure as input was the obvious choice, whereas now the idea is to use a kind of track profile, which shall describe the maximum allowed velocity over time, of a notional track. For visualization, please refer to \ref{fig:expandedmodel_siminput}. The simulation then only needs to brake or accelerate depending on train velocity versus maximum velocity at the current time.
+
+\par
+Accordingly, the first expansion step is to create a mechanism to control the train so to speak. For this purpose, the system simply checks for each timestamp whether the current velocity of the train is greater than the maximum allowed velocity at the current time, according to simulation input. If this is the case, a braking pressure is applied to the pipe, scaling with the difference between vmax and vreal, vdiff. This means the higher vdiff is, the more braking pressure gets applied. This more or less covers the braking part of the system.
+
+\par
+The model however also needs a component for acceleration. To simplify things, the logic here is that if the train is not braking, it is accelerating, which actually works out pretty well. To accelerate, a traction force is applied, which also scales with vdiff, so the higher vdiff, the higher the applied traction force.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{./pic/expandedmodel_pressure}
+	\caption{Expanded model - Pressure Calculation}
+	\label{fig:expandedmodel_pressure}
+\end{figure}
+
+\par\noindent
+Depicted above is the system which determines braking pressure to apply. It calculates vdiff by subtracting vmax from vreal, which is then fed into a one-dimensional lookup table. The table is a sampled representation of a function with fixed breakpoints, mapping one function value to each breakpoint, like so \[
+H(n) =
+\begin{cases}
+0.1 & \text{if $n=1$} \\
+0.7 & \text{if $n=15$} \\
+0.8 & \text{if $n=20$} \\
+\text{..}
+\end{cases}
+\]
+
+\par\noindent
+where n are the breakpoints of vdiff. Since the pressure should only be applied if vreal is greater than vmax, the ultimate result follows the logic of the following equation \[
+	f(n) = H(n) * (\text{vreal $>$ vmax})
+\]
+
+\par\noindent
+where vreal $>$ vmax is either 1 or 0.
 
 \section{Further Expansion}
 \label{sec:FurtherExpansion}

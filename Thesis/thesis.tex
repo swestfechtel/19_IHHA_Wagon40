@@ -35,12 +35,16 @@
 \usepackage{booktabs}
 \usepackage[export]{adjustbox}
 \usepackage{titlesec}
+\usepackage{mathtools}
 
 \titleformat{\chapter}[display]
 {\normalfont\bfseries}{}{0pt}{\Large}
 
 \newcommand{\TODO}[1]{\textbf{\textcolor{red}{$<$TODO: #1$>$}}}
 \newcommand{\NOTE}[1]{\textcolor{cyan}{NOTE: #1}}
+
+\DeclarePairedDelimiter\Floor\lfloor\rfloor
+\DeclarePairedDelimiter\Ceil\lceil\rceil
 
 
 % Schriftart
@@ -210,9 +214,17 @@
 %\includepdf[pages=1-4]{./app/Datenblatt1.pdf} % Datei mit 4 Seiten
 %\includepdf[pages=1]{./app/Datenblatt2.pdf} % Datei mit einer Seite
 
-\chapter{Rohdatenvisualisierungen}
-\begin{enumerate}
-      \item Graustufen
-      \item Verteilungen
-\end{enumerate}
+\chapter{Data visualization}
+
+%\includepdf{./app/initmodel_pressureinput.pdf}
+\TODO{Visualisierungen einfügen}
+\begin{center}
+	Initial model - simulation input
+	\label{fig:initmodel_siminput}
+	Expanded model - simulation input
+	\label{fig:expandedmodel_siminput}
+\end{center}
+
+
+
 \end{document}
