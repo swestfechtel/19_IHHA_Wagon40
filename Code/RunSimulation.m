@@ -55,15 +55,15 @@ simin1.time = t;
 simin1.signals.values = f;
 
 sim('Simulation.slx')
-V = [velocity.Time, velocity.Data];
-V1 = [velocity1.Time, velocity1.Data];
-F = [force.Time, force.Data];
-F1 = [force1.Time, force1.Data];
-P = [pressure.Time, pressure.Data];
-P1 = [pressure1.Time, pressure1.Data];
-writematrix(V,'Velocity.csv');
-writematrix(V1,'Velocity1.csv');
-writematrix(F,'Force.csv');
-writematrix(F1,'Force1.csv');
-writematrix(P,'Pressure.csv');
-writematrix(P1,'Pressure1.csv');
+% V = [velocity.Time, velocity.Data];
+% V1 = [velocity1.Time, velocity1.Data];
+% F = [force.Time, force.Data];
+% F1 = [force1.Time, force1.Data];
+% P = [pressure.Time, pressure.Data];
+% P1 = [pressure1.Time, pressure1.Data];
+% writematrix(V,'Velocity.csv');
+% writematrix(V1,'Velocity1.csv');
+% writematrix(F,'Force.csv');
+% writematrix(F1,'Force1.csv');
+% writematrix(P,'Pressure.csv');
+% writematrix(P1,'Pressure1.csv');
