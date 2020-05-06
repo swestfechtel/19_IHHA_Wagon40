@@ -1,0 +1,30 @@
+\chapter{Introduction}
+\label{chap:Introduction}
+\par\noindent
+\emph{\textbf{Introduction}} This section describes the background and motivation of the research (Sect. \ref{sec:Background}), the problem to be addressed (Sect. \ref{sec:Problem}) and the proposed solution (Sect. \ref{sec:Solution}) 
+
+\section{Background}
+\label{sec:Background}
+
+\subsection{Railway Vehicle Operations}
+\label{sec:RailwayVehicleOperations}
+
+\subsection{Train Protection Systems}
+\label{sec:TrainProtectionSystems}
+
+\subsection{Braking Curves}
+\label{sec:BrakingCurves}
+
+\section{Problem}
+\label{sec:Problem}
+
+\par\noindent
+As has been shown, to predict the braking behavior of trains, readings of wagons and locomotives are needed. Unfortunately, freight vehicles do not currently posses the sensory equipment that would be necessary to obtain such data in an adequate quantity and quality, especially in regards to \emph{big data processing}. Although it has been proposed to equip freight wagons accordingly \TODO{ref zu wagon4.0}, it will be years before enough rolling stock has been retrofitted as to make it possible to obtain the desired data.
+
+\section{Solution}
+\label{sec:Solution}
+
+\par\noindent
+This work proposes to circumvent the problem described above by creation of an artificial data set. The set must replicate the actual distribution of braking behavior as close as possible. It is therefore necessary to first create a model encompassing the braking process of a freight train. This model will be discussed in depth in chapter \ref{chap:ModelingOfTrainOperations}. It can then, once finished, be also used to generate the data set by simulation. This process will be discussed in chapter \ref{chap:DataGeneration}.
+\par
+As real life operations would yield very high quantities of data, the simulation output must be stored in a data structure which is suitable for big data processing. This structure will also be discussed in chapter \ref{chap:DataGeneration}.

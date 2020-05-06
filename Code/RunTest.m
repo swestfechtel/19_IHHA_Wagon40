@@ -40,7 +40,7 @@ BPden = [1 alpha]; %?
 tmax = 3600;
 nmax = tmax * 2;
 t = linspace(0, tmax, nmax);
-u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 22*ones(1000*2,1)];
+u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 22*ones(900*2,1); 0*ones(100*2,1)];
 simin.time = t;
 simin.signals.values = u;
 
@@ -114,10 +114,10 @@ for i = length(wagons):-1:1
 
     parpool(10);
     out = parsim(in,'ShowProgress','on');
-    for i = 1:1:length(out)
+    for l = 1:1:length(out)
    	allruns = allruns + 1;
         name = strcat('run',num2str(allruns));
-        WriteOutput(name,out(i).get('velocity'),out(i).get('force'),out(i).get('pressure'),out(i).get('distance'),out(i).get('acceleration_neg'),out(i).get('ids'),t,u,trackgradient,Ft(i),fc(i));
+        WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
     end
     track = 1;
     delete(gcp('nocreate'));
