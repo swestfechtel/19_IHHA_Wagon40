@@ -54,7 +54,9 @@ simin.signals.values = u;%[-300*ones(nmax,1)];
 simin1.time = t;
 simin1.signals.values = f;
 
-sim('Simulation.slx')
+sim('Simulation.slx');
+% Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
+Write(0,velocity,force,pressure,0,acceleration,[20,40],0,0,0,400000,0.45);
 % V = [velocity.Time, velocity.Data];
 % V1 = [velocity1.Time, velocity1.Data];
 % F = [force.Time, force.Data];
