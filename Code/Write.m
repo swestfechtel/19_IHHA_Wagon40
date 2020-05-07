@@ -2,7 +2,7 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 	numrows = get(force,'Length');
 	time = force.Time;
 	mkdir('output/');
-	matrix = [0,0,0,0,0,0,0,wagon_ids,grad,ft,fc];
+	matrix = [];
 
 	for i = 1:1:numrows
 		f = getdatasamples(force,i);
