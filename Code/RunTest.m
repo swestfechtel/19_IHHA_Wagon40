@@ -44,33 +44,9 @@ u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 22*
 simin.time = t;
 simin.signals.values = u;
 
-
-%% Vars
-% m = 90000; % Masse
-%v0 = 100/3.6; % Ausgangsgeschwindigkeit
-%efficiency = 0.95; % efficiency of braking force generation
 trackgradient = 0; % Steigung/Gefaelle der Stecke
-%Ft = 360000; % traction force
-%fc = 0.45;
-% Fb = -1*m; %?
 pool = readmatrix('pool.csv');
-% num_wagons = 10;
 mkdir output;
-% for i = 1:1:40
-% 	num_wagons = i;
-% 	name_wagons = strcat('wagons',num2str(i));
-% 	for j = 0.05:0.01:0.78
-% 		fc = j;
-% 		name_fc = strcat('fc',num2str(j));
-% 		for k = 200000:1000:400000
-% 			Ft = k;
-% 			sim('Simulation_v2.slx');
-% 			name = strcat(name_wagons,name_fc,'ft',num2str(k));
-% 			WriteOutput(name,velocity,force,pressure,distance,acceleration_neg,ids,t,u,trackgradient,Ft,fc);
-% 			fprintf('Run %s complete.\n', name);
-% 		end
-% 	end
-% end
 
 wagons = 1:1:40;
 friction = 0.05:0.01:0.78;
@@ -114,12 +90,15 @@ for i = length(wagons):-1:1
 
     parpool(10);
     out = parsim(in,'ShowProgress','on');
+    matrix = [];
     for l = 1:1:length(out)
-   	allruns = allruns + 1;
+   		allruns = allruns + 1;
         % name = strcat('run',num2str(allruns));
         % WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
-        Write(allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
+        tmp = Write(allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
+        matrix = [matrix;tmp];
     end
+    writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
     track = 1;
     delete(gcp('nocreate'));
     fprintf('Run %i complete.\n',i);
