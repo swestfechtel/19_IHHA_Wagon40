@@ -1,7 +1,7 @@
 function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
 	numrows = get(force,'Length');
 	time = force.Time;
-	mkdir('output/');
+	% mkdir('output/');
 	matrix = [];
 
 	for i = 1:1:numrows
