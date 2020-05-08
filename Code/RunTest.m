@@ -92,7 +92,7 @@ for i = length(wagons):-1:1
     out = parsim(in,'ShowProgress','on');
     matrix = [];
     tic
-    parfor l = 1:1:length(out)
+    for l = 1:1:length(out)
    		allruns = allruns + 1;
         % name = strcat('run',num2str(allruns));
         % WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
