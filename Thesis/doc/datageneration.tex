@@ -3,6 +3,25 @@
 
 \section{Data Structure}
 \label{sec:DataStructure}
+\par\noindent
+As has been denoted previously, generated data should be suitable for big data processing. The first approach was to create a new directory for each iteration, and also save the different parameters to different files. Since this is very inefficient in terms of number of file accessions and therefore negatively impacts performance, as well as being unsuitable for transformations to big data file systems like Apache Hadoop or Apache Hive, it has been proposed to write all output into one single file. Let's take a look at the structure first.
 
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+	\hline
+	simID & Timestamp & $F_{wagon0}$ & ... & $P_{wagon0}$ & ... & $v_{wagon0}$ & ... & $a_{wagon0}$ & ... & Distance & Wagons & Track angle (tentative) & $F_{t}$ & fc & Track profile \\
+	\hline
+	&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+	\hline
+	&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+	\hline
+	&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+	\hline
+	&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+	\hline
+	&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+	\hline
+	&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+	\hline
+\end{tabular}
 \section{Analysis of generated Data}
 \label{sec:AnalysisOfGeneratedData}
