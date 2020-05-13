@@ -1,5 +1,6 @@
 function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
 	numrows = get(force,'Length');
+	wagon_ids = wagon_ids(wagon_ids~=0);
 	numwagons = length(wagon_ids);
 	time = force.Time;
 	filler = zeros(1,40 - numwagons);
@@ -24,6 +25,6 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 	end
 	% writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
 	% ret = 1;
-	fprintf('Create output matrix for Simulation ID %d\n', id);
+	% fprintf('Create output matrix for Simulation ID %d\n', id);
 	ret = matrix;
 end
