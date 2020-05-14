@@ -1,10 +1,10 @@
 function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
 	numrows = get(force,'Length');
 	wagon_ids = wagon_ids(wagon_ids~=0);
+	wagon_ids = double(wagon_ids);
 	numwagons = length(wagon_ids);
 	time = force.Time;
 	filler = zeros(1,40 - numwagons);
-	% mkdir('output/');
 	matrix = [];
 
 	for i = 1:1:numrows
@@ -16,8 +16,8 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 		v = [v,filler];
 		a = getdatasamples(acceleration,i);
 		a = [a,filler];
-		% d = getdatasamples(distance,i);
-		d = 0;
+		d = getdatasamples(distance,i);
+
 		row = [id,time(i),f,p,v,a,d,wagon_ids,grad,ft,fc]; 	% TODO: add simulation input aka track profile to matrix
 															%		print wagon ids as list delimited by colon (,)
 															%		performance?
