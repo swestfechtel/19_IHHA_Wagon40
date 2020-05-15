@@ -17,7 +17,7 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 		a = getdatasamples(acceleration,i);
 		a = [a,filler];
 		d = getdatasamples(distance,i);
-
+		fprintf('Dimensions:\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n',length(id),length(time(i)),length(f),length(p),length(v),length(a),length(d),length(wagon_ids),length(grad),length(ft),length(fc));
 		row = [id,time(i),f,p,v,a,d,wagon_ids,grad,ft,fc]; 	% TODO: add simulation input aka track profile to matrix
 															%		print wagon ids as list delimited by colon (,)
 															%		performance?

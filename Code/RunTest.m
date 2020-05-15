@@ -99,7 +99,6 @@ for i = length(tracforce):-1:1
    		allruns = allruns + 1;
         % name = strcat('run',num2str(allruns));
         % WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
-        fprintf('Dimensions:\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n',length(allruns,out(l).get('velocity')),length(out(l).get('force')),length(out(l).get('pressure')),length(out(l).get('distance')),length(out(l).get('acceleration_neg')),length(out(l).get('ids')),length(t),length(u),length(trackgradient),length(Ft(l)),length(fc(l)));
         tmp = Write(allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
         fprintf('Length of new row: %d.',length(tmp));
         matrix = [matrix;tmp];
