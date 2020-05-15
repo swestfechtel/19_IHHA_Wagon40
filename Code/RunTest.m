@@ -53,9 +53,9 @@ friction = 0.05:0.01:0.78;
 tracforce = 200000:1000:400000;
 track = 1;
 allruns = 1;
-for i = length(wagons):-1:1
+for i = length(tracforce):-1:1
     for j = length(friction):-1:1
-        for k = length(tracforce):-1:1
+        for k = length(wagons):-1:1
             in(track) = Simulink.SimulationInput('Simulation_v2');
             in(track) = in(track).setVariable('num_wagons',wagons(i));
             in(track) = in(track).setVariable('fc',friction(j));
@@ -88,6 +88,7 @@ for i = length(wagons):-1:1
         end
     end
 
+    fprintf('Starting pool for %d simulation runs.\n',length(in));
     parpool(10);
     out = parsim(in,'ShowProgress','on');
     matrix = [];
