@@ -59,9 +59,9 @@ for i = length(tracforce):-1:1
     for j = length(friction):-1:1
         for k = length(wagons):-1:1
             in(track) = Simulink.SimulationInput('Simulation_v2');
-            in(track) = in(track).setVariable('num_wagons',wagons(i));
+            in(track) = in(track).setVariable('num_wagons',wagons(k));
             in(track) = in(track).setVariable('fc',friction(j));
-            in(track) = in(track).setVariable('Ft',tracforce(k));
+            in(track) = in(track).setVariable('Ft',tracforce(i));
             
             in(track) = in(track).setVariable('alpha',alpha);
             in(track) = in(track).setVariable('BPden',BPden);
@@ -82,7 +82,7 @@ for i = length(tracforce):-1:1
             in(track) = in(track).setVariable('u',u);
             in(track) = in(track).setVariable('VBD',VBD);
             
-            Ft(track) = tracforce(k);
+            Ft(track) = tracforce(i);
             fc(track) = friction(j);
             
             track = track + 1;        
