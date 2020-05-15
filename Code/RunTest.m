@@ -46,7 +46,9 @@ simin.signals.values = u;
 
 trackgradient = 0; % Steigung/Gefaelle der Stecke
 pool = readmatrix('pool.csv');
+% rmdir output;
 mkdir output;
+
 
 wagons = 1:1:40;
 friction = 0.05:0.01:0.78;
