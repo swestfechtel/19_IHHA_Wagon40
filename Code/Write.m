@@ -1,8 +1,8 @@
 function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
 	numrows = get(force,'Length');
-	wagon_ids = wagon_ids(wagon_ids~=0);
+	cntwagon_ids = wagon_ids(wagon_ids~=0);
 	wagon_ids = double(wagon_ids);
-	numwagons = length(wagon_ids);
+	numwagons = length(cntwagon_ids);
 	time = force.Time;
 	filler = zeros(1,40 - numwagons);
 	matrix = [];
