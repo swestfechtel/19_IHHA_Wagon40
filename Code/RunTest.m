@@ -102,10 +102,12 @@ for i = length(tracforce):-1:1
     end
     toc
     allruns = allruns + length(out);
+    tic
     writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
+    toc
     track = 1;
     delete(gcp('nocreate'));
-    fprintf('Run %d (of %d total) complete.\n',length(trackforce)-i,length(trackforce));
+    fprintf('Run %d (of %d total) complete.\n',length(tracforce)-i,length(tracforce));
 end
 
 %myCluster = parcluster('local');
