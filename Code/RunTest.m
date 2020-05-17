@@ -96,15 +96,13 @@ for i = length(tracforce):-1:1
     out = parsim(in,'ShowProgress','on');
     matrix = [];
     tic
-    for l = 1:1:length(out)
-   		allruns = allruns + 1;
-        % name = strcat('run',num2str(allruns));
-        % WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
-        tmp = Write(allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
-        % matrix = [matrix;tmp];
+    parfor l = 1:1:length(out)
+        tmp = Write(l + allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
+        matrix = [matrix;tmp];
     end
     toc
-    % writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
+    allruns = allruns + length(out);
+    writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
     track = 1;
     delete(gcp('nocreate'));
     fprintf('Run %i complete.\n',i);
