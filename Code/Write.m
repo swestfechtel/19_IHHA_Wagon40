@@ -16,6 +16,7 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 															%		performance?
 		matrix = [matrix;row];
 	end
+	fprintf('Created output matrix for simid %d\n',id);
 	% writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
 	% ret = 1;
 	% fprintf('Create output matrix for Simulation ID %d\n', id);

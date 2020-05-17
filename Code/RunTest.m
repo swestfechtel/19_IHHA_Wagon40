@@ -105,7 +105,7 @@ for i = length(tracforce):-1:1
     writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
     track = 1;
     delete(gcp('nocreate'));
-    fprintf('Run %i complete.\n',i);
+    fprintf('Run %d (of %d total) complete.\n',length(trackforce)-i,length(trackforce));
 end
 
 %myCluster = parcluster('local');
