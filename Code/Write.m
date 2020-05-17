@@ -21,7 +21,8 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 		row = [id,time(i),f,p,v,a,d,wagon_ids,grad,ft,fc]; 	% TODO: add simulation input aka track profile to matrix
 															%		print wagon ids as list delimited by colon (,)
 															%		performance?
-		matrix = [matrix;row];
+		% matrix = [matrix;row];
+		writematrix(row,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
 	end
 	% writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
 	% ret = 1;

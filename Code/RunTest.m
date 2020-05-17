@@ -3,7 +3,7 @@
 clear all
 clc
 warning ('off','all');
-numcores = 20; % configure number of cores to use in parallel processing
+numcores = 10; % configure number of cores to use in parallel processing
 
 %% Constants
 
@@ -101,10 +101,10 @@ for i = length(tracforce):-1:1
         % name = strcat('run',num2str(allruns));
         % WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
         tmp = Write(allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
-        matrix = [matrix;tmp];
+        % matrix = [matrix;tmp];
     end
     toc
-    writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
+    % writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
     track = 1;
     delete(gcp('nocreate'));
     fprintf('Run %i complete.\n',i);
