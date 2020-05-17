@@ -3,6 +3,7 @@
 clear all
 clc
 warning ('off','all');
+numcores = 20; % configure number of cores to use in parallel processing
 
 %% Constants
 
@@ -91,7 +92,7 @@ for i = length(tracforce):-1:1
     end
 
     fprintf('Starting pool for %d simulation runs.\n',length(in));
-    parpool(10);
+    parpool(numcores);
     out = parsim(in,'ShowProgress','on');
     matrix = [];
     tic
