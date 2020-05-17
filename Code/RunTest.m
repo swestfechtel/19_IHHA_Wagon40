@@ -101,7 +101,6 @@ for i = length(tracforce):-1:1
         % name = strcat('run',num2str(allruns));
         % WriteOutput(name,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
         tmp = Write(allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),t,u,trackgradient,Ft(l),fc(l));
-        fprintf('Length of new row: %d.',length(tmp));
         matrix = [matrix;tmp];
     end
     toc
