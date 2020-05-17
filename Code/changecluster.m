@@ -1,8 +1,4 @@
 allNames = parallel.clusterProfiles();
-allNames
 myCluster = parcluster('local');
-myCluster.NumWorkers = 12;
+myCluster.NumWorkers = 20;
 saveProfile(myCluster);
-myCluster
-
-parpool(12);
