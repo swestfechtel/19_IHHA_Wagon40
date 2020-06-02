@@ -36,6 +36,7 @@
 \usepackage[export]{adjustbox}
 \usepackage{titlesec}
 \usepackage{mathtools}
+%\usepackage[cache=false]{minted}
 
 \titleformat{\chapter}[display]
 {\normalfont\bfseries}{}{0pt}{\Large}
@@ -86,17 +87,23 @@
 \newcolumntype{C}{>{\centering\arraybackslash$}p{3cm}<{$}}
 
 % Quellcode / Kommandozeileneingabe
-\lstdefinestyle{BashInputStyle}{
-  language=bash,
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{ocker}{rgb}{0.92,0.68,0.2}
+
+\lstset{
+  language=matlab,
+  aboveskip=10mm,
+  belowskip=10mm,
   basicstyle=\small\ttfamily,
-  %numbers=left,
-  %numberstyle=\tiny,
-  %numbersep=3pt,
   frame=tb,
   columns=fullflexible,
-  %backgroundcolor=\color{yellow!20},
-  linewidth=0.9\linewidth,
-  xleftmargin=0.1\linewidth
+  commentstyle=\color{gray},
+  stringstyle=\color{dkgreen},
+  keywordstyle=\color{mauve},
+  numberstyle=\color{ocker},
+  tabsize=3
 }
 
 % Inhalt
