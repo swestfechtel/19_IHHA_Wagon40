@@ -1,3 +1,84 @@
 \chapter{Fundamentals of Railway Vehicle Engineering}
 \label{chap:FundamentalsOfRailwayVehicleEngineering}
+\par\noindent
+\emph{\textbf{Introduction}} This section deals with the engineering backgrounds of the work, especially in regards to railway vehicle engineering and railway physics. 
+For the creation of a braking model, it is necessary to have at least a basic understanding of the engineering and physics behind rail traffic. The most fundamental component to understand is, of course, the actual braking process.
 
+\section{The train brake}
+\label{sec:TrainBrake}
+\par\noindent
+There is a number of different construction methods for brakes, but each must address two problems: The means of transmission of commands and the actual form of brake force generation. The focus here will lie on the pneumatic brake, since it is still the most prevalent in cargo vehicles. From a macro perspective, the pneumatic brake has three main components: The train driver's brake valve, the brake pipe and one or more brake cylinders for each wagon or locomotive. The driver's valve and the brake pipe are primarily the means of command transmission, while the brake cylinder's job is the generation of brake force. 
+
+\par
+The braking system is an indirect one, which means the brake pipe needs to be vented to apply the brakes. Therefore, the brake pipe is kept at a running pressure of 5 bar. One advantage of this approach is that brakes are automatically applied in case of train separation. The downside, however, is that command transmission is limited to the speed of sound. In order to generate that pressure, the locomotive contains a compressor and an air reservoir. Initially, the brake pipe as well as all auxiliary air reservoirs are brought to operating pressure. If the train operator wishes to brake, he has to actuate the driver's brake valve, which in turn vents the brake pipe, usually as far as 3.5 bar (full braking), sometimes even lower. As rule of thumb, the more pressure is vented, the more braking force is applied. Each wagon brake has, in essence, an auxiliary air reservoir, a distributor valve and a braking cylinder. When the brake pipe is vented, the air in the auxiliary reservoir has a higher pressure. This difference in pressure triggers a switch of the distributor valve, and the air from the reservoir may go into the brake cylinder. This increase in the cylinder generates the actual braking force. To summarize, the amount of generated braking pressure is directly proportional to the amount of pressure vented.
+
+\section{Influences on braking performance}
+\label{sec:InfluencesOnBraking}
+\par\noindent
+Since the aim of this work is to monitor braking performance, it becomes necessary to understand which factors influence the braking process, and how. The braking process is, in its core, a system. A system may be defined as a set of objects, which are interconnected by relations. It is enclosed by its environment, which may or may not affect the system itself. Below is an illustration, also called box model:
+
+\begin{align*}
+	\displaystyle {\mathcal {R}}\ 
+	\rightarrow \ 
+	{\begin{array}{|c|}\hline \quad \\\quad {\mathcal {V}}_{i}\leftrightarrow {\mathcal {V}}_{n}\quad \\\quad \\\hline \end{array}}\ 
+	\rightarrow
+\end{align*}
+
+\par\noindent
+The box represents the actual system, ${\mathcal{V}}_{i}$ are the system variables, or objects, their relations represented by the $\leftrightarrow$. The ${\mathcal{R}}$ represents the system's environment and its influence on the system itself. Finally, the rightmost arrow $\rightarrow$ is the influence the system might have on the environment, though this is often disregarded as the focus lies on what happens inside the system. Creating a box model for the braking process makes for an easier identification of the influencing factors, and allows for their categorization into inherent, i.e. system variables, and external, i.e. system environment.
+\par
+From a modeling perspective, it is sensible to differentiate as follows: Everything related to the train itself is part of the system, and everything else is part of the system's environment. As per definition, it is compromised of a set of variables, a set of relations, and a set of constants. Let us make a formal definition of the model for the braking process system:
+
+\begin{align*}
+{\mathcal {M}} = \{ \{{\mathcal {V}}\}, \{{\mathcal{R}}\}, \{c\} \}
+\end{align*}
+
+\noindent
+where $\{{\mathcal {V}}\}$ is the set of system variables, $\{{\mathcal {R}}\}$ is the set of relations (a) between elements of $\{{\mathcal {V}}\}$ and (b) between system and environment, and $\{c\}$ is the set of system constants. The system variables may be subsystems themselves. We shall take a closer look at $\{{\mathcal {V}}\}$ first.
+
+\subsection{Inherent factors, model variables}
+\label{sec:InherentFactors}
+\par\noindent
+Looking at ${\mathcal{M}}$, which is the system describing the braking process, $\{{\mathcal {V}}\}$ consists of all factors inherent to the train which have an impact on the braking. The main ones are:
+\begin{itemize}
+	\item The train brake
+	\item The wagon mass, denoted as $m$
+	\item The train velocity, denoted as $v$
+	\item The train composition, i.e. in which order the wagons are, for example the heaviest wagons being in front and the lighter ones at the back, denoted as $comp$
+\end{itemize}
+\noindent
+It is noteworthy that the train brake is another system in itself, which is perfectly fine of course. Alas, it is therefore necessary to define another model.
+
+\begin{align*}
+{\mathcal {M}}_{B} = \{ \{{\mathcal {V}}_{B}\}, \{{\mathcal{R}}_{B}\}, \{c_{B}\} \}
+\end{align*}
+
+\noindent
+Let ${\mathcal{M}}_{B}$ be the model describing the system train brake, with $\{{\mathcal {V}}_{B}\} = $\TODO{Wie genau Bremsmodell definieren?}.
+\par
+We can therefore define $\{{\mathcal {V}}\} = \{\{{\mathcal {M}}_{B}\},m,v,comp\}$
+
+\subsection{Relations}
+\label{sec:Relations}
+\subsubsection{Relations between system variables}
+\label{sec:RelationsSystemVariables}
+\TODO{Wie interagieren die Systemvariablen untereinander}
+\subsubsection{Relations between environment and system}
+\label{sec:RelationsEnvironmentSystem}
+\par\noindent
+\TODO{\begin{itemize}
+		\item Wheel Rail Friction
+		\item Track gradient
+\end{itemize}}
+
+\section{What to monitor}
+\label{sec:Monotoring}
+\par\noindent
+\TODO{\begin{itemize}
+		\item Brake force over time
+		\item Brake pressure over time
+		\item Deceleration
+		\item Velocity
+		\item Braking distance
+	\end{itemize}
+}
