@@ -54,9 +54,52 @@ It is noteworthy that the train brake is another system in itself, which is perf
 \end{align*}
 
 \noindent
-Let ${\mathcal{M}}_{B}$ be the model describing the system train brake, with $\{{\mathcal {V}}_{B}\} = $\TODO{Wie genau Bremsmodell definieren?}.
+Let ${\mathcal{M}}_{B}$ be the model describing the system train brake, with $\{{\mathcal {V}}_{B}\} = \{ {\mathcal {M}}_{bv}, {\mathcal {M}}_{bp}, {\mathcal {M}}_{bc} \}$, where ${\mathcal {M}}_{bv}$ is the model of the brake valve, ${\mathcal {M}}_{bp}$ the model of the brake pipe and ${\mathcal {M}}_{bc}$ the model of the brake cylinder, which in turn shall be defined as follows:
+
+\begin{align*}
+{\mathcal {M}}_{bv} = \{ \{{\mathcal {V}}_{bv}\}, \{{\mathcal{R}}_{bv}\}, \{c_{bv}\} \}
+\end{align*}
+
+\noindent
+Let ${\mathcal {M}}_{bv}$ be the model describing the system brake valve, with ${\mathcal {V}}_{bv} = \{x\}$, ${\mathcal {R}}_{bv} = \emptyset$ and $c_{bv} = \emptyset$, where $x$ is the state of the brake valve, i.e. its opening percentage, ranging from 0 (fully closed) to 1 (fully open, full braking).
+
+\begin{align*}
+{\mathcal {M}}_{bp} = \{ \{{\mathcal {V}}_{bp}\}, \{{\mathcal{R}}_{bp}\}, \{c_{bp}\} \}
+\end{align*}
+
+\noindent
+Let ${\mathcal {M}}_{bp}$ be the model describing the system brake pipe, with ${\mathcal {V}}_{bp} = \{ l_{bp}, p_{bp} \}$, ${\mathcal {R}}_{bp} = \emptyset$ and $c_{bp} = \{ v_{bp} \}$, where $l_{bp}$ is the physical length of the brake pipe, $p_{bp}$ is the pressure on the brake pipe and $v_{bp}$ is the propagation velocity of the pipe's medium. 
+
+\begin{align*}
+{\mathcal {M}}_{bc} = \{ \{{\mathcal {V}}_{bc}\}, \{{\mathcal{R}}_{bc}\}, \{c_{bc}\} \}
+\end{align*}
+
+\noindent
+Let ${\mathcal {M}}_{bc}$ be the model describing the system brake cylinder, with ${\mathcal {V}}_{bc} = \{ p_{bc} \}$, ${\mathcal {R}}_{bc} = \emptyset$ and $c_{bc} = \{ t_{bc} \}$, where $p_{bc}$ is the cylinder's pressure and $t_{bc}$ is the cylinder's fill time.
+\bigskip
+\par\noindent
+This wraps up the definition of ${\mathcal{V}}_{B}$. We may now get to the definition of ${\mathcal{R}}_{B}$, which is the relations (a) between the elements of ${\mathcal{V}}_{B}$ and (b) between ${\mathcal{M}}_{B}$ and its environment. Let us begin with (a):
 \par
-We can therefore define $\{{\mathcal {V}}\} = \{\{{\mathcal {M}}_{B}\},m,v,comp\}$
+
+
+\bigskip\noindent\TODO{
+	Wie genau Bremsmodell definieren?
+	Notizen: Bremse besteht aus, wie oben definiert:
+	\begin{itemize}
+		\item Brake valve - opening percentage $x$
+		\item Brake pipe - length $l_{bp}$, propagation velocity $v_{bp}$, pressure $p_{bp}$
+		\item Brake cylinder - fill time $t_{bc}$, pressure $p_{bc}$
+	\end{itemize}
+	Relationen sind:
+	\begin{enumerate}
+		\item $x \sim p_{bp}$, intern
+		\item $p_{bp} \sim p_{bc}$, intern
+		\item $p_{bc} \sim F_{b}$, ausgangs-
+		\item Wie zeitliche Auswirkungen darstellen?
+	\end{enumerate}
+}
+\par\noindent
+We can therefore define $\{{\mathcal {V}}\} = \{{\mathcal {M}}_{B},m,v,comp\}$
 
 \subsection{Relations}
 \label{sec:Relations}
