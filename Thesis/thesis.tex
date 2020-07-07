@@ -36,10 +36,11 @@
 \usepackage[export]{adjustbox}
 \usepackage{titlesec}
 \usepackage{mathtools}
+\usepackage{ulem}
 %\usepackage[cache=false]{minted}
 
-\titleformat{\chapter}[display]
-{\normalfont\bfseries}{}{0pt}{\Large}
+%\titleformat{\chapter}[display]
+%{\normalfont\bfseries}{}{0pt}{\Large}
 
 \newcommand{\TODO}[1]{\textbf{\textcolor{red}{$<$TODO$>$ #1 $</>$}}}
 \newcommand{\NOTE}[1]{\textcolor{cyan}{NOTE: #1}}
@@ -103,6 +104,7 @@
   stringstyle=\color{dkgreen},
   keywordstyle=\color{mauve},
   numberstyle=\color{ocker},
+  breaklines=true,
   tabsize=3
 }
 

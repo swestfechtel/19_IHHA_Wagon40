@@ -1,7 +1,7 @@
 \chapter{Fundamentals of Railway Vehicle Engineering}
 \label{chap:FundamentalsOfRailwayVehicleEngineering}
 \par\noindent
-\emph{\textbf{Introduction}} This section deals with the engineering backgrounds of the work, especially in regards to railway vehicle engineering and railway physics. 
+\textit{\textbf{Introduction}} This section deals with the engineering backgrounds of the work, especially in regards to railway vehicle engineering and railway physics. 
 For the creation of a braking model, it is necessary to have at least a basic understanding of the engineering and physics behind rail traffic. The most fundamental component to understand is, of course, the actual braking process.
 
 \section{The train brake}
@@ -39,12 +39,15 @@ where $\{{\mathcal {V}}\}$ is the set of system variables, $\{{\mathcal {R}}\}$ 
 \subsection{Inherent factors, model variables}
 \label{sec:InherentFactors}
 \par\noindent
-Looking at ${\mathcal{M}}$, which is the system describing the braking process, $\{{\mathcal {V}}\}$ consists of all factors inherent to the train which have an impact on the braking. The main ones are:
+Looking at ${\mathcal{M}}$, which is the system describing the braking process, $\{{\mathcal {V}}\}$ consists of all factors inherent to the train which have an impact on the braking, as well as the relevant quantifiers. The main ones are:
 \begin{itemize}
 	\item The train brake
 	\item The wagon mass, denoted as $m$
 	\item The train velocity, denoted as $v$
 	\item The train composition, i.e. in which order the wagons are, for example the heaviest wagons being in front and the lighter ones at the back, denoted as $comp$
+	\item The generated braking force, denoted as $F_{b}$
+	\item The train's deceleration, denoted as $a$
+	\item The train's braking distance, denoted as $d$
 \end{itemize}
 \noindent
 It is noteworthy that the train brake is another system in itself, which is perfectly fine of course. Alas, it is therefore necessary to define another model.
@@ -79,33 +82,68 @@ Let ${\mathcal {M}}_{bc}$ be the model describing the system brake cylinder, wit
 \bigskip
 \par\noindent
 This wraps up the definition of ${\mathcal{V}}_{B}$. We may now get to the definition of ${\mathcal{R}}_{B}$, which is the relations (a) between the elements of ${\mathcal{V}}_{B}$ and (b) between ${\mathcal{M}}_{B}$ and its environment. Let us begin with (a):
+\bigskip
+\par\noindent
+\textit{\textbf{Convention}} For readability purposes, $\propto$ shall from here on denote direct proportionality, and $\sim$ shall denote inverse proportionality.
+\bigskip
 \par
+${\mathcal{M}}_{bv}$ relates to ${\mathcal{M}}_{bp}$ in the sense that the state of the brake valve has a direct influence on the pressure on the brake pipe. More specifically, $x \in {\mathcal{V}}_{bv}$ is inversely proportional to $p_{bp} \in {\mathcal{V}}_{bp}$. The higher the value of $x$, i.e. the opening percentage of the brake valve, the lower the value of $p_{bp}$, i.e. the pressure on the brake pipe. We can therefore denote $x \sim p_{bp}$, and subsequently define a relation $R_{bv,bp}: {\mathcal{M}}_{bv} \sim {\mathcal{M}}_{bp}$. 
+\par
+${\mathcal{M}}_{bp}$ relates to ${\mathcal{M}}_{bc}$ in the sense that the pressure on the brake pipe has a direct influence on the brake cylinder's pressure. More specifically, $p_{bp} \in {\mathcal{V}}_{bp}$ is inversely proportional to $p_{bc} \in {\mathcal{V}}_{bc}$. The lower the value of $p_{bp}$, i.e. the pressure on the brake pipe, the higher the value $p_{bc}$, i.e. the pressure in the brake cylinder. We can therefore denote $p_{bp} \sim p_{bc}$, and subsequently define a relation $R_{bp,bc}: {\mathcal{M}}_{bp} \sim {\mathcal{M}}_{bc}$.
+\par
+For simplicity, we can look at ${\mathcal{M}}_{B}$ as being isolated from its environment, i.e. the environment does not impact ${\mathcal{M}}_{B}$, and vice versa. Therefore, (b) is void. Consequently, we can define ${\mathcal{R}}_{B}$ as follows:
 
+\begin{align*}
+{\mathcal{R}}_{B} = \{ R_{bv,bp}, R_{bp,bc} \}
+\end{align*}
+
+\noindent
+This finally leaves us with $c_{B}$. Since call constants are specific to the respective sub-models $\in {\mathcal{V}}_{B}$, ${\mathcal{M}}_{B}$ has no constants of its own, therefore $c_{B} = \emptyset$. This completes the definition of ${\mathcal{M}}_{B}$, and we can properly define the set of model variables of the model braking process:
+
+\begin{align*}
+\{ {\mathcal{V}} \} = \{ {\mathcal{M}}_{B},m,v,comp,F_{b},a,d \}
+\end{align*}
 
 \bigskip\noindent\TODO{
 	Wie genau Bremsmodell definieren?
 	Notizen: Bremse besteht aus, wie oben definiert:
 	\begin{itemize}
-		\item Brake valve - opening percentage $x$
-		\item Brake pipe - length $l_{bp}$, propagation velocity $v_{bp}$, pressure $p_{bp}$
-		\item Brake cylinder - fill time $t_{bc}$, pressure $p_{bc}$
+		\item \sout{Brake valve - opening percentage $x$}
+		\item \sout{Brake pipe - length $l_{bp}$, propagation velocity $v_{bp}$, pressure $p_{bp}$}
+		\item \sout{Brake cylinder - fill time $t_{bc}$, pressure $p_{bc}$}
 	\end{itemize}
 	Relationen sind:
 	\begin{enumerate}
-		\item $x \sim p_{bp}$, intern
-		\item $p_{bp} \sim p_{bc}$, intern
+		\item \sout{$x \sim p_{bp}$, intern}
+		\item \sout{$p_{bp} \sim p_{bc}$, intern}
 		\item $p_{bc} \sim F_{b}$, ausgangs-
 		\item Wie zeitliche Auswirkungen darstellen?
 	\end{enumerate}
 }
-\par\noindent
-We can therefore define $\{{\mathcal {V}}\} = \{{\mathcal {M}}_{B},m,v,comp\}$
 
 \subsection{Relations}
 \label{sec:Relations}
+\par\noindent
+Looking at our model ${\mathcal{M}}$, we have now defined its set of variables, ${\mathcal{V}}$. Next, it is necessary to define its set of relations, ${\mathcal{R}}$, which may be distinguished into internal and external relations.
+
 \subsubsection{Relations between system variables}
 \label{sec:RelationsSystemVariables}
-\TODO{Wie interagieren die Systemvariablen untereinander}
+\par\noindent
+Obviously, the train brake ${\mathcal{M}}_{B}$ relates to $F_{B}$ as it is the actor responsible for generating the braking force. More specifically, $p_{bc} \in {\mathcal{V}}_{bc}$, which is the pressure in the brake cylinder, is directly proportionate to $F_{b}$, meaning the higher the pressure, the more force is applied. We can therefore denote $p_{bc} \propto F_{b}$, and subsequently define a relation $R_{{\mathcal{M}}_{B},F_{b}}: {\mathcal{M}}_{B} \propto F_{b}$.
+\par
+Furthermore, the wagon mass $m$ relates to $F_{B}$ as well
+
+\bigskip\noindent\TODO{
+	Wie interagieren die Systemvariablen untereinander? Relationen sind:
+	\begin{itemize}
+		\item \sout{${\mathcal{M}}_{B} \propto F_{b}$}
+		\item $m \propto F_{b}$
+		\item $v \propto d$
+		\item $F_{B} \propto a$
+		\item $a \propto d$
+	\end{itemize}
+}
+
 \subsubsection{Relations between environment and system}
 \label{sec:RelationsEnvironmentSystem}
 \par\noindent
@@ -117,7 +155,9 @@ We can therefore define $\{{\mathcal {V}}\} = \{{\mathcal {M}}_{B},m,v,comp\}$
 \section{What to monitor}
 \label{sec:Monotoring}
 \par\noindent
-\TODO{\begin{itemize}
+\TODO{
+	Gehört das zu Modellvariablen??
+	\begin{itemize}
 		\item Brake force over time
 		\item Brake pressure over time
 		\item Deceleration
