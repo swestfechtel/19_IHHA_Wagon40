@@ -116,7 +116,7 @@ This finally leaves us with $c_{B}$. Since call constants are specific to the re
 	\begin{enumerate}
 		\item \sout{$x \sim p_{bp}$, intern}
 		\item \sout{$p_{bp} \sim p_{bc}$, intern}
-		\item $p_{bc} \sim F_{b}$, ausgangs-
+		\item \sout{$p_{bc} \sim F_{b}$, ausgangs-}
 		\item Wie zeitliche Auswirkungen darstellen?
 	\end{enumerate}
 }
@@ -131,25 +131,73 @@ Looking at our model ${\mathcal{M}}$, we have now defined its set of variables, 
 \par\noindent
 Obviously, the train brake ${\mathcal{M}}_{B}$ relates to $F_{B}$ as it is the actor responsible for generating the braking force. More specifically, $p_{bc} \in {\mathcal{V}}_{bc}$, which is the pressure in the brake cylinder, is directly proportionate to $F_{b}$, meaning the higher the pressure, the more force is applied. We can therefore denote $p_{bc} \propto F_{b}$, and subsequently define a relation $R_{{\mathcal{M}}_{B},F_{b}}: {\mathcal{M}}_{B} \propto F_{b}$.
 \par
-Furthermore, the wagon mass $m$ relates to $F_{B}$ as well
+Furthermore, the wagon mass $m$ relates to $F_{B}$ as well. The vehicle mass is proportional to the kinetic energy to dissipate during braking actions. The larger $m$ is, the more kinetic energy ($E=\frac{1}{2} \cdot m \cdot v^{2}$), and thus the higher the required braking force to slow the train down. As the vehicle mass varies, so must the applied braking force in order to avoid wheel slip and locking of the wheels which occurs if too much force is applied [train braking, 19]. We can therefore denote $m \propto F_{b}$, and subsequently define a relation $R_{m,F_{b}}: m \propto F_{b}$.
+\par
+The braking deceleration $a$, neglecting other resistances, is influenced by two factors: The applied braking force $F_{b}$, and the vehicle's mass $m$. As per Newton's second law of motion, $F=m \cdot a$, so $a=\frac{F_{b}}{m}$ [train braking, 23]. In practice, this means the braking force is directly proportional to the braking deceleration, and the vehicle mass is inversely proportional to $a$, not taking into consideration wheel slip. We can therefore denote $F_{b} \propto a$, and $m \sim a$, and subsequently define two relations $R_{F_{b},a}: F_{b} \propto a$, and $R_{m,a}: m \sim a$.
+\par
+Finally, the braking distance $d$ is also dependent on two factors: The running speed $v$, and the braking deceleration $a$.  We have 
+
+\begin{equation}
+\label{eq:brakingdistance}
+\begin{aligned}
+&d=\frac{1}{2} \cdot a \cdot t^{2} \\
+&v=a \cdot t \quad \rightarrow \quad s=\frac{v^{2}}{2 \cdot a}
+\end{aligned}
+\end{equation}
+
+\noindent
+where $t$ is the stopping time [train braking, 23]. So in practice, the running speed $v$ is directly proportional to the braking distance, and the braking deceleration is inversely proportional to $d$. We can therefore denote $v \propto d$, and $a \sim d$, and subsequently define two relations $R_{v,d}: v \propto d$, and $R_{a,d}: a \sim d$.
+\par
+This completes the set of internal relations of ${\mathcal{R}}$.
 
 \bigskip\noindent\TODO{
 	Wie interagieren die Systemvariablen untereinander? Relationen sind:
 	\begin{itemize}
 		\item \sout{${\mathcal{M}}_{B} \propto F_{b}$}
-		\item $m \propto F_{b}$
-		\item $v \propto d$
-		\item $F_{B} \propto a$
-		\item $a \propto d$
+		\item \sout{$m \propto F_{b}$}
+		\item \sout{$F_{B} \propto a$}
+		\item \sout{$m \sim a$}
+		\item \sout{$v \propto d$}
+		\item \sout{$a \propto d$}
 	\end{itemize}
 }
 
 \subsubsection{Relations between environment and system}
 \label{sec:RelationsEnvironmentSystem}
 \par\noindent
-\TODO{\begin{itemize}
+To recapitulate, ${\mathcal{M}}$ is a model for the braking process. Having handled its internal relations, it is now time to focus on the relation between the system and its environment. As established in section \ref{sec:InfluencesOnBraking}, the environment consists of all factors which have an influence on the braking process, but are not inherent to the train itself. In practice, this is the track which the train operates on. More specifically, it is two main properties of the track:
+\begin{itemize}
+	\item The track gradient, denoted as $\alpha$
+	\item The wheel/rail friction coefficient, denoted as $\mu$
+\end{itemize}
+\noindent
+As shown earlier, the braking deceleration has a substantial influence on the braking process, namely on the braking distance and on the stopping time (see equation \ref{eq:brakingdistance}). So far, the deceleration was only related to vehicle mass $m$ and applied braking force $F_{b}$, both being internal relations. However, the track gradient, also has an influence on $a$. As the train goes uphill, the deceleration increases; as it goes downhill, it decreases, due to gravity. A simple formula might look like this:
+
+\begin{equation}
+\label{eq:deceleration}
+a = a_{brake} + a_{grad}
+\end{equation}
+
+\noindent
+where $a$ is the total braking deceleration, $a_{brake}$ is the deceleration resulting from the application of the brakes, and $a_{grad}$ is the acceleration/deceleration resulting from the track gradient. Let $a_{grad}$ be positive for upward, negative for downward slopes. We can define $a_{grad}$ as a step function
+
+\begin{equation}
+\label{eq:gradientdeceleration}
+a_{grad}(\alpha) =
+\begin{cases}
+\geq 0 & \text{if $\alpha \geq 0$} \\
+< 0 & \text{if $\alpha < 0$}
+\end{cases}
+\end{equation}
+
+\noindent
+where $\alpha$ is the value of the gradient, e.g. a percentage or an angle. This shows the track gradient is directly proportional to the total braking deceleration. We can therefore denote $\alpha \propto a$, and subsequently define a relation $R_{\alpha,a}: \alpha \propto a$.
+\par
+The second factor to look at is the wheel/rail adhesion.  
+
+\bigskip\noindent\TODO{\begin{itemize}
 		\item Wheel Rail Friction
-		\item Track gradient
+		\item \sout{Track gradient}
 \end{itemize}}
 
 \section{What to monitor}
@@ -164,4 +212,11 @@ Furthermore, the wagon mass $m$ relates to $F_{B}$ as well
 		\item Velocity
 		\item Braking distance
 	\end{itemize}
+}
+
+\section{Time considerations}
+\label{sec:TimeConsiderations}
+\par\noindent
+\TODO{
+	Zeitlich diskret -> zeitlich kontinuierlich
 }
