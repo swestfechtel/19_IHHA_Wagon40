@@ -193,30 +193,45 @@ a_{grad}(\alpha) =
 \noindent
 where $\alpha$ is the value of the gradient, e.g. a percentage or an angle. This shows the track gradient is directly proportional to the total braking deceleration. We can therefore denote $\alpha \propto a$, and subsequently define a relation $R_{\alpha,a}: \alpha \propto a$.
 \par
-The second factor to look at is the wheel/rail adhesion.  
+The second factor to look at is the wheel/rail adhesion. Environmental effects like rain, ice or contaminants such as leaves have a degrading effect on the wheel/rail friction. This is expressed by a friction coefficient $\mu$, where a lower value, for example $\mu = 0.2$ for a wet rail surface, means worse braking performance compared to a higher value, e.g. $\mu = 0.4$ for normal conditions. The friction coefficient is a limiting factor for the applied braking force, in the sense that when too much force force is applied, wheel slip occurs, and braking performance decreases [design and simulation, 12]. While $\mu$ does not have a direct influence on $F_{b}$, it is, in practice, still related to it in that it is a limiting factor; an indirect influence, so to speak. In that regard, we might say it is directly proportional to the braking force: The higher the friction coefficient, the higher the maximum braking force that may be applied. We can therefore denote $\mu \propto F_{b}$, and subsequently define a relation $R_{\mu,F_{b}}: \mu \propto F_{b}$.
+\bigskip
+\par\noindent
+We may now properly define the set of relations of the model braking process:
+
+\begin{align*}
+\{ {\mathcal{R}} \} = \{ R_{{\mathcal{M}}_{B},F_{b}} \:,\: R_{m,F_{b}} \:,\: R_{F_{b},a} \:,\: R_{m,a} \:,\: R_{v,d} \:,\: R_{a,d} \:,\: R_{\alpha,a} \:,\: R_{\mu,F_{b}} \}
+\end{align*}
 
 \bigskip\noindent\TODO{\begin{itemize}
-		\item Wheel Rail Friction
+		\item \sout{Wheel Rail Friction}
 		\item \sout{Track gradient}
 \end{itemize}}
+
+\section{Constants}
+\label{sec:Constants}
+\par\noindent
+The braking process, being a dynamic one, has no constants in itself. Some of its components do, in particular the models making up the train brake, like the brake pipe ${\mathcal{M}}_{bp}$'s propagation velocity $v_{bp}$. However, these have already been discussed; we can therefore conclude that $\{ c \} = \emptyset$.
+\bigskip
+\par\noindent
+To summarize, we have now defined all necessary components of ${\mathcal{M}}$, namely its set of model variables $\{{\mathcal{V}}\}$, its set of relations $\{{\mathcal{R}}\}$, and its set of constants $\{c\}$. This model will be used in chapter \ref{chap:ModelingOfTrainOperations} as a theoretical basis upon which to build a simulink model, simulating the braking process.
+
+\bigskip\noindent\TODO{
+	\sout{Konstanten fuer ${\mathcal{M}}$?}
+}
 
 \section{What to monitor}
 \label{sec:Monotoring}
 \par\noindent
-\TODO{
-	Gehört das zu Modellvariablen??
-	\begin{itemize}
-		\item Brake force over time
-		\item Brake pressure over time
-		\item Deceleration
-		\item Velocity
-		\item Braking distance
-	\end{itemize}
+
+\bigskip\noindent\TODO{
+	$\rightarrow$ chapter 3
 }
 
 \section{Time considerations}
 \label{sec:TimeConsiderations}
 \par\noindent
-\TODO{
-	Zeitlich diskret -> zeitlich kontinuierlich
+So far, we have looked at the braking process from a discrete point of view. However, in reality it is a continuous process and we thus have to take time into consideration. 
+
+\bigskip\noindent\TODO{
+	Zeitlich diskret $\rightarrow$ zeitlich kontinuierlich
 }
