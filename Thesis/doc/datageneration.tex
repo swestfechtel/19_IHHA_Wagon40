@@ -11,7 +11,7 @@
 \end{figure}
 
 \par\noindent
-The track profile, as depicted above, basically describes at which time which maximum velocity is allowed, and thus the train either brakes or accelerates to match that value at all times. What we can gather from this is that the simulation is time-based. Here we have 7200 data points as in input, which is 3600 seconds times two for better precision.
+Figure \ref{fig:siminput} visualizes how a track profile might look like. It stipulates the maximum allowed velocity for discrete points in time; the train either brakes or accelerates accordingly in order to match the corresponding value. An example: Let the simulation time be 1200 seconds, and $v_{max}(1200)=20 \; \frac{m}{s}$. Let the train's velocity $v$ be $25 \; \frac{m}{s}$. The train will engage its brakes (or continue braking, if they have already been engaged) in order to bring $v$ down to $20 \; \frac{m}{s}$. If $v$ were $15 \; \frac{m}{s}$, the train would accelerate instead.
 
 \section{Matlab Code}
 \label{sec:MatlabCode}

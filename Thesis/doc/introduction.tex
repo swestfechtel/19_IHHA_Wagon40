@@ -15,7 +15,6 @@ Road and rail traffic are fundamentally different, mainly in two regards. First,
 \par
 In road traffic, there is many different vehicles, all operating independently from one another. Although there is ongoing experimentation to utilize autonomous vehicles to recreate train-like lorry configurations, this is not the norm. In contrast to that, the track guiding of wheels offered by rails enables the formation of trains possibly kilometers long, reducing labor cost, infrastructure usage and energy consumption. This, of course, calls for special safety measures to be taken, since higher speeds and payloads result in long braking distances. 
 
-\TODO{Abstandsparadigma}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/abstaende}
@@ -24,7 +23,7 @@ In road traffic, there is many different vehicles, all operating independently f
 \end{figure}
 
 \par\noindent
-The above figure illustrates the three main principles of spacing between two trains on the same track. $s_{b,i}$ denoted the braking distance of train $i$, $t_{l,i}$ the length of train $i$, $l_{bl}$ the length of a track section, and S a safety margin. Using approach (c), the distance between trains A and B must at any time be at least A's maximum braking distance plus the length 
+The above figure illustrates the three main principles of spacing between two trains on the same track. $s_{b,i}$ denoted the braking distance of train $i$, $t_{l,i}$ the length of train $i$, $l_{bl}$ the length of a track section, and S a safety margin. Fixed spatial distance, the most commonly used today, is very inefficient in terms of track utilization, but offers the most protection against accidents. In order to optimize efficiency, it is desirable to move towards relative braking distances, which requires the ability to very accurately predict braking capacity of trains.
 
 \subsection{Automatic Train Protection and Cab Signaling}
 \label{sec:ATPCS}
@@ -36,7 +35,7 @@ Cab signaling relays all relevant information to the train operator so they may 
 \subsection{Braking Curves}
 \label{sec:BrakingCurves}
 \par\noindent
-For the ETCS to be able to supervise train velocity, it needs to determine the vehicle's braking capacity for any given moment in time, using a mathematical model of the braking dynamics and of the track characteristics. This prediction is called a braking curve, which describe the probable braking process for a set of input parameters. As a simple example, refer to the following figure \TODO{Abbildung einfuegen}. Since braking performance cannot be predicted with absolute certainty, an $\epsilon$ parameter needs to be factored in to account for random behavior. Therefore, there is a number of discrete braking curves for any set of parameters, forming a probability distribution. The parameters may be classified in four categories:
+For the ETCS to be able to supervise train velocity, it needs to determine the vehicle's braking capacity for any given moment in time, using a mathematical model of the braking dynamics and of the track characteristics. This prediction is called a braking curve, which describe the probable braking process for a set of input parameters. As a simple example, refer to figure \ref{fig:brakingcurves}. Since braking performance cannot be predicted with absolute certainty, an $\epsilon$ parameter needs to be factored in to account for random behavior. Therefore, there is a number of discrete braking curves for any set of parameters, forming a probability distribution. The parameters may be classified in four categories:
 \begin{itemize}
 	\item Physical parameters, which is real time measurements from on-board equipment
 	\item Fixed values, like driver reaction time
@@ -45,11 +44,18 @@ For the ETCS to be able to supervise train velocity, it needs to determine the v
 \end{itemize}
 The fourth category, train data, is the key factor for this work, as will be explained below.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.2]{./pic/171026_Transrail_BrakingCurves-14}
+	\caption{Braking curves}
+	\label{fig:brakingcurves}
+\end{figure}
+
 \section{Problem}
 \label{sec:Problem}
 
 \par\noindent
-As mentioned, one category of input parameters for the calculation of braking curves is data directly associated with the rolling stock, and in particular to the braking system itself. While this does not necessarily present itself as an issue in passenger trains, freight wagons, in contrast, are usually not electrified and therefore do not currently posses the sensory equipment that would be necessary to obtain such data in an adequate quantity and quality, especially in regards to \emph{big data processing}. Although it has been proposed to equip freight wagons accordingly \TODO{ref zu wagon4.0}, it will be years before enough rolling stock has been retrofitted as to make it possible to obtain the desired data. Since braking curves vary according to the rolling stock, this lack of data makes calculation thereof impossible.
+As mentioned, one category of input parameters for the calculation of braking curves is data directly associated with the rolling stock, and in particular to the braking system itself. While this does not necessarily present itself as an issue in passenger trains, freight wagons, in contrast, are usually not electrified and therefore do not currently posses the sensory equipment that would be necessary to obtain such data in an adequate quantity and quality, especially in regards to \textit{big data processing}. Although it has been proposed to equip freight wagons accordingly (Refer to the concept \enquote{freight wagon 4.0} by Dr. Manfred Enning and Dr. Raphael Pfaff), it will be years, possibly decades, before enough rolling stock has been retrofitted as to make it possible to obtain the desired data. Since braking curves vary according to the rolling stock, this lack of data makes calculation thereof impossible.
 
 \section{Solution}
 \label{sec:Solution}

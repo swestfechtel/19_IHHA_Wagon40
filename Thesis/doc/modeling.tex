@@ -1,12 +1,16 @@
 \chapter{Modeling of Train Operations}
 \label{chap:ModelingOfTrainOperations}
 \par\noindent
-\textit{\textbf{Introduction}} As has been noted in \ref{sec:Solution}, it is necessary to model the braking process of freight trains. All modeling work has been performed with Matlab Simulink. 
+\textit{\textbf{Introduction}} Chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering} has established the theoretical model of the train braking process. It will serve as a foundation to build a practical model suitable for conducting actual simulations. 
+
+\section{Matlab Simulink}
+\label{sec:MatlabSimulink}
+The model has been built utilizing the software Matlab Simulink by Mathworks. It offers several distinct advantages: It uses a graphical block diagramming tool which makes it very intuitive to use. At the same time, various official and third-party add-on libraries make it very versatile. Most importantly, as it is tightly integrated with the Matlab environment, it can be used for both modeling and simulating dynamical systems, like the braking process of a train.
 
 \section{Initial Model}
 \label{sec:InitialModel}
 \par\noindent
-The initial model to be expanded upon describes a single braking process. It's sole input, apart from some constants, is pressure over time, meaning a distinct value ranging between 5 and 3.5 bar for every timestamp. For visualization, please refer to \ref{fig:initmodel_siminput}. Let's take a look at the whole model first. 
+Looking back at chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, the aim is to build a model for the braking process of a freight train. An initial model of a single braking procedure, kindly provided by Dr. Raphael Pfaff, will serve as a basis. Most of the components previously designed in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering} can already be found therein.  
 
 \begin{figure}[H]
 	\centering
@@ -16,7 +20,7 @@ The initial model to be expanded upon describes a single braking process. It's s
 \end{figure}
 
 \par\noindent
-Here we see a model of a freight train of fixed length, consisting of 40 wagons, which are, for better readability, further condensed to subsystems of five wagons each, so there are eight of these subsystems. They are interconnected via braking pipe, which is also the sole input to each system. Outputs are braking pressure and braking force. We will take a look at the actual wagon model next.
+Figure \ref{fig:initmodel_whole} shows a model of a freight train of fixed length, consisting of 40 wagons in total. For better readability, five wagons are condensed into one subsystem each, marked by the red rectangle. The subsystems are interconnected by a brake pipe, marked by the green arrow. They have one input port for the incoming pressure on the brake pipe, and three output ports, one for the pipe connection to the next subsystem, and two for recording brake pressure and brake force (marked by the pink and blue arrows, respectively). A depiction of a subsystem can be found in appendix \ref{fig:initmodel_subsys}.  
 
 \begin{figure}[H]
 	\centering
@@ -26,9 +30,25 @@ Here we see a model of a freight train of fixed length, consisting of 40 wagons,
 \end{figure}
 
 \par\noindent
-Above is the initial wagon model. \NOTE{All 40 wagon models are identical here. This will be addressed in section \ref{sec:ModelExpansion}}. It consists of three main components.
+Figure \ref{fig:expandedmodel_wagon} shows a model of a freight wagon. It already encompasses several of the model variables defined in section \ref{sec:InherentFactors}. The brake pipe ${\mathcal{M}}_{bp}$ is represented by the green arrows. It leads from input port (pink rectangle) to output port (yellow rectangle); the propagation delay is realized by a transport delay block (green rectangle), using propagation velocity $v_{bp}$ and wagon length $l_{bp}$. The brake pressure $p_{bp}$ is the value of the signal traveling through the connection. Note that in the simulation, the signal value for $p_{bp}$ is the difference between regular operating pressure and actual pressure, e.g. if simulated pressure on the brake pipe is 3.5 bar, the signal value is $3.5 - 5 = -1.5$.
 \par
-In the upper left corner is the input, which is the current pressure in the braking pipe. In the lower left corner, the propagation delay of the braking pipe is calculated. This is done by \TODO{}. Top center describes the calculation of the actual braking force, which is achieved by \TODO{}. Finally, the \TODO{Formulieren: Fahrzeugwiderstand}.
+The brake cylinder ${\mathcal{M}}_{bc}$ is represented by the red rectangle. The pressure on the brake pipe $p_{bp}$ is converted into a coefficient between zero and one, where zero equals no brakes applied, or $p_{bp} = 5$, and one equals full braking pressure, or $p_{bp} = 3.5$. The exact formula is this:
+
+\begin{align*}
+p_{bc} = p_{bp} \cdot \frac{-1}{5-3.5}
+\end{align*}
+
+\noindent
+So for a braking pressure of 4 bar, the coefficient would be $(4 - 5) \cdot \frac{-1}{5-3.5} = -1 \cdot \frac{-1}{1.5} = \frac{2}{3}$. A rate limiter block accounts for the brake cylinder's filling time $t_{bc}$. Finally, the braking force is calculated by multiplying the maximum braking force, which is mainly dependent on the wagon mass $m$ [train braking, 22]. So for the braking pressure, we have:
+
+\begin{align*}
+F_{b} = F_{b,max} \cdot p_{bc}
+\end{align*}
+
+\noindent
+The final component is the factoring in of the driving resistance of the train, utilizing Strahl's formula. This is represented by the blue rectangle. By continuous-time integration of the acceleration, which is calculated according to Newton's second law of motion ($a = \frac{F}{m})$, it is possible to determine the velocity, which in turn allows for the calculation of the force generated by the driving resistance, This force is then added to the braking force and fed into an output port, marked with the black rectangle.
+\par
+Regarding simulation, this initial model is only fit for one single braking process, where a train of fixed length and fixed composition, brakes from an initial velocity all the way to a halt; the only variation is the pressure on the brake pipe, which is also the sole input for the simulation. Appendix \ref{fig:initmodel_input} shows how that input might look like.
 
 \section{Model Expansion}
 \label{sec:ModelExpansion}
