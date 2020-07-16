@@ -105,7 +105,7 @@ for i = length(tracforce):-1:1
     toc
     allruns = allruns + length(out);
     tic
-    writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
+    writematrix(matrix,'output/output2.tsv','FileType','text','WriteMode','append','Delimiter','tab');
     toc
     track = 1;
     delete(gcp('nocreate'));
