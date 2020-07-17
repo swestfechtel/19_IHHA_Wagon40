@@ -54,13 +54,9 @@ Regarding simulation, this initial model is only fit for one single braking proc
 \label{sec:ModelExpansion}
 
 \par\noindent
-This initial model is however not of sufficient detail. Where it merely describes one single braking process, we need to simulate a whole ride, with alternating phases of braking and accelerating. For that purpose, the simulation input has to be adjusted accordingly. Where previously it was only one braking process, using braking pressure as input was the obvious choice, whereas now the idea is to use a kind of track profile, which shall describe the maximum allowed velocity over time, of a notional track. For visualization, please refer to \ref{fig:expandedmodel_siminput}. The simulation then only needs to brake or accelerate depending on train velocity versus maximum velocity at the current time.
-
+This initial model is however not of sufficient detail. Where it merely simulates a single, rather undynamic braking process, the goal is the simulation of a train ride, with alternating phases of braking and accelerating. The model should furthermore factor in more components of the theoretical model ${\mathcal{M}}$ discussed in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, as well as allow for the recording of more properties specific to the braking process. For that purpose, the model has to be expanded. The simulation input needs to be changed in order to allow for the simulation of a train ride. Previously, it being only one braking process, using braking pressure as input was the obvious choice. This will be replaced by a track profile, according to which the train either engages its brakes, or accelerates. This will be discussed in further detail in chapter \ref{chap:DataGeneration}.
 \par
-Accordingly, the first expansion step is to create a mechanism to control the train so to speak. For this purpose, the system simply checks for each timestamp whether the current velocity of the train is greater than the maximum allowed velocity at the current time, according to simulation input. If this is the case, a braking pressure is applied to the pipe, scaling with the difference between $v_{max}$ and $v_{real}$, $v_{dif}$. This means the higher $v_{dif}$ is, the more braking pressure gets applied. This more or less covers the braking part of the system.
-
-\par
-The model however also needs a component for acceleration. To simplify things, the logic here is that if the train is not braking, it is accelerating, which actually works out pretty well. To accelerate, a traction force is applied, which also scales with $v_{dif}$, so the higher $v_{dif}$, the higher the applied traction force.
+In the initial model, the train is only able to decelerate by engaging its brakes. To allow for acceleration, it is necessary to expand the model accordingly. This may be realized by a rather simple two-point controller, which means the train is either accelerating or decelerating. The decision on whether to engage brakes or apply traction force at a particular point in time is made utilizing the track profile: If the current velocity of the train $v_{real}$ is greater than the maximum allowed velocity $v_{max}$ at that time, the train engages its brakes by lowering the pressure on the brake pipe $p_{bp}$. If $v_{real}$ is less than $v_{max}$, the train applies a traction force $F_{t}$ in order to increase speed. Both $p_{bp}$ and $F_{t}$ scale with the discrepancy between $v_{real}$ and $v_{max}$. This means the higher the value of $v_{dif}$ is, the more pressure is vented from the brake pipe (or the more traction force is applied). This prevents the train from overcompensating, for example applying full braking pressure to decrease velocity by $2 \; \frac{m}{s}$. Notice there is actually no case for when $v_{real}$ equals $v_{max}$, i.e. $v_{dif} = 0$. One might expect that this would lead to the train constantly oscillating between accelerating and decelerating, but in practice this does not occur, and it is thus unnecessary to account for that case.
 
 \begin{figure}[H]
 	\centering
@@ -70,7 +66,7 @@ The model however also needs a component for acceleration. To simplify things, t
 \end{figure}
 
 \par\noindent
-Depicted above is the system which determines braking pressure to apply. It calculates $v_{dif}$ by subtracting $v_{max}$ from $v_{real}$, which is then fed into a one-dimensional lookup table. The table is a sampled representation of a function with fixed breakpoints, mapping one function value to each breakpoint, like so
+Figure \ref{fig:expandedmodel_pressure} shows the subsystem responsible for the calculation of the braking pressure $p_{bp}$. The difference between $v_{real}$ and $v_{max}$ is used as input for a one-dimensional lookup table, which in essence is a step-function mapping different input values to discrete output values. 
 
 \begin{equation}
 \label{eq:lookuptable}
@@ -84,15 +80,27 @@ H(n) =
 \end{equation}
 
 \noindent
-where $n$ is the breakpoints of $v_{dif}$. Since the pressure should only be applied if $v_{real}$ is greater than $v_{max}$, the ultimate result follows the logic of the following equation
+Equation \ref{eq:lookuptable} is an example for how this function might look like. The input parameter $n$ stands for the discrepancy between actual and maximum velocity $v_{dif}$, and the output of the $H(n)$ represents the amount of pressure to vent from the brake pipe. This allows for adjusted braking, where $p_{bp}$ is directly proportional to $v_{dif}$.
+\par
+To account for the train only engaging its brakes in case its current velocity is higher than the maximum allowed velocity, a relational operator $>$ is used to compare $v_{real}$ to $v_{max}$.
 
 \begin{equation}
 \label{eq:brakingpressure}
-P(n,t) = H(n) * (v_{real}(t) > v_{max}(t))
+P(n,t) = H(n) \cdot (v_{real}(t) > v_{max}(t))
 \end{equation}
 
 \noindent
-where $v_{real}(t)$ is train velocity over time, $v_{max}(t)$ is maximum velocity over time, and $v_{real}(t) > v_{max}(t)$ is either 1 or 0.
+Equation \ref{eq:brakingpressure} describes the logic. The braking pressure for a velocity discrepancy $n$ at a point in time $t$ equals the result of $H(n)$ (equation \ref{eq:lookuptable}) multiplied with the result of the relational operation comparing $v_{real}(t)$ to $v_{max}(t)$, which is 1 if $v_{real}(t)$ is greater than $v_{max}(t)$, and otherwise 0. This ensures that $P(n,t)$ is zero when the train's velocity is lower than the maximum allowed velocity, and thus no pressure is vented from the brake pipe, and no brakes are engaged. This part of the system is marked by the green rectangle in figure \ref{fig:expandedmodel_pressure}. The blue rectangle marks the conversion of the braking pressure into a signal fit for further calculations, analogous to the initial model, discussed previously. Finally, the red rectangle marks the component for storing the initial velocity of a braking process, which is needed to calculate the braking distance further down the line. This is achieved by using a block to detect a decrease of $v_{max}$, i.e. the block outputs a signal of 1 or 0, accordingly. 
+
+\begin{equation}
+\label{eq:initialvelocity}
+v_{0} = v_{real} \cdot b + v_{0,old} \cdot \bar{b}
+\end{equation}
+
+\noindent
+Equation \ref{eq:initialvelocity} describes the logic. The initial velocity of a braking process $v_{0}$ equals the train's velocity multiplied with the result of the decrease detection block, denoted as $b$, added with the previously stored initial velocity $v_{0,old}$ multiplied with the inverse of $b$, denoted as $\bar{b}$. If there is a decrease of $v_{max}$, i.e. the train starts braking, we get $v_{0} = v_{real} \cdot 1 + v_{0,old} \cdot 0 = v_{real}$. In any other case, we get $v_{0} = v_{real} \cdot 0 + v_{0,old} \cdot 1 = v_{0,old}$, i.e. the value of $v_{0}$ does not change as no new braking process has begun.
+\par
+This completes the description of this subsystem. It is worthy to note that, reaching back to chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, this is the practical implementation of the brake valve ${\mathcal{M}}_{bv}$.
 
 \begin{figure}[H]
 	\centering
@@ -102,7 +110,23 @@ where $v_{real}(t)$ is train velocity over time, $v_{max}(t)$ is maximum velocit
 \end{figure}
 
 \par\noindent
-The above system determines the traction force to apply. As has been discussed earlier, this works like a simple bang-bang controller. The design is very similar to the braking pressure system: $v_{dif}$ is again fed into a one-dimensional lookup table, which outputs different values for traction force accordingly. The higher $v_{dif}$ is, the higher the traction force to apply. It is then added to the current braking force, however only either traction or braking force is at any given time positive while the other is zero, which is achieved by the equations
+Figure \ref{fig:expandedmodel_force} shows the subsystem responsible for the calculation of the traction force, the train's acceleration, the train's velocity and the train's traveled distance. The applied traction force scales with $v_{dif}$ in a similar fashion to how $p_{bp}$ does. Again, a one-dimensional lookup table is used to calculate the appropriate value for $F_{t}$.
+
+\begin{equation}
+\label{eq:lookuptable2}
+H(n) =
+\begin{cases}
+0.05 & \text{if $n=1$} \\
+0.45 & \text{if $n=15$} \\
+0.6 & \text{if $n=20$} \\
+\text{..}
+\end{cases}
+\end{equation}
+
+\noindent
+Equation \ref{eq:lookuptable2} shows an example for how the function for the table might look like. The key difference to the calculation of the braking pressure is that the output values of the function are coefficients which are then multiplied with the maximum possible traction force, rather than raw values like in equation \ref{eq:lookuptable}. This part of the system is marked by the red rectangle.
+
+ As has been discussed earlier, this works like a simple bang-bang controller. The design is very similar to the braking pressure system: $v_{dif}$ is again fed into a one-dimensional lookup table, which outputs different values for traction force accordingly. The higher $v_{dif}$ is, the higher the traction force to apply. It is then added to the current braking force, however only either traction or braking force is at any given time positive while the other is zero, which is achieved by the equations
  
 \begin{equation}
 \label{eq:tracforce}
