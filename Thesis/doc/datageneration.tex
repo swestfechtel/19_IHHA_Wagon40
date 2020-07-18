@@ -18,18 +18,21 @@ Figure \ref{fig:siminput} visualizes how a track profile might look like. It sti
 \par\noindent
 We need to do some general configuration first, like clearing the workspace off all output which might still be present from previous simulations. 
 
-\begin{lstlisting}
-%% Initialise
+\begin{python}
 clear all
 clc
 warning ('off','all');
-numcores = 10; % configure number of cores to use in parallel processing
-\end{lstlisting}
+numcores = 10;
+\end{python}
 
 \par\noindent
 We then need to initialise all constants which values remain the same for all simulations. Please refer to the code snippet below for descpriptions:
 
-\begin{lstlisting}
+\bigskip\noindent\TODO{
+	change all code environments to python, remove comments or make modification of package pythonhighlight for matlab
+}
+
+\begin{matlab}
 %% Constants
 
 RBD = 5; % regular operations pressure (bar)
@@ -59,12 +62,12 @@ simin.time = t; % set simulation time input
 simin.signals.values = u; % set simulation signal input
 
 trackgradient = 0; % pitch angle
-\end{lstlisting}
+\end{matlab}
 
 \par\noindent
 After having initialised all necessary constants, we now get to configuring variable simulation input.
 
-\begin{lstlisting}
+\begin{matlab}
 pool = readmatrix('pool.csv'); % read wagon pool
 mkdir output; % make output directory
 
@@ -143,7 +146,7 @@ for i = length(tracforce):-1:1 		% all possible combinations of traction force,
 	delete(gcp('nocreate')); % delete parallel pool
 	fprintf('Run %d (of %d total) complete.\n',length(tracforce)-i,length(tracforce));
 end
-\end{lstlisting}
+\end{matlab}
 
 \par\noindent
 As our aim is to generate large quantities of data, it becomes feasible to use use parallel processing for our simulations. For this purpose, we need to create an array to hold input for all simulation runs. There are three variables which change for each run, they are traction force of the locomotive, wheel/rail friction coefficient and number of wagons, respectively. A nested loop is used to create all possible combinations of these variables, and each single combination gets stored, as a new entry, in the array which holds all input.
@@ -154,7 +157,7 @@ Writing of the output is also done in smaller batches. The best approach to mini
 \par
 The function below compresses all output of one single simulation into one matrix. Raw simulation output consists of a few time-series objects, like braking force and braking pressure, as well as some metadata. These objects are fed into the write function, which does as many loops as there are rows in the time-series objects. It then packs all rows from each time-series into one big row, adds the meta-data and appends the large row to the matrix, which gets returned at the end. Refer to section \ref{sec:DataStructure} for a more detailed look at the structure of the output matrix.
 
-\begin{lstlisting}
+\begin{matlab}
 function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
 	numrows = get(force,'Length');
 	wagon_ids = double(wagon_ids);
@@ -179,9 +182,9 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 	% fprintf('Create output matrix for Simulation ID %d\n', id);
 	ret = matrix;
 end
-\end{lstlisting}
+\end{matlab}
 
-\begin{lstlisting}[language=python]
+\begin{python}
 import csv
 import random
 
@@ -194,7 +197,7 @@ with open('pool.csv', 'w', newline='') as pool:
 		mass = random.randrange(12000, 90000, 100) # create random wagon mass between 12 t and 90 t with step size 100
 		braking_eff = round(random.uniform(0.75, 0.95),2) # create random braking efficiency as uniform distribution between 75 % and 95 %
 		writer.writerow({'Wagon_ID': i, 'Mass': mass, 'Braking_eff': braking_eff})
-\end{lstlisting}
+\end{python}
 
 \par\noindent
 The above python script is used to create a randomized pool of 500 wagons to be used in simulation. Each wagon has a unique id, a randomized mass, ranging between 12000 and 90000 kilograms, and a braking efficiency, which is a uniform distribution between .75 and .95.

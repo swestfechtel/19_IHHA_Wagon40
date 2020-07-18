@@ -124,48 +124,77 @@ H(n) =
 \end{equation}
 
 \noindent
-Equation \ref{eq:lookuptable2} shows an example for how the function for the table might look like. The key difference to the calculation of the braking pressure is that the output values of the function are coefficients which are then multiplied with the maximum possible traction force, rather than raw values like in equation \ref{eq:lookuptable}. This part of the system is marked by the red rectangle.
-
- As has been discussed earlier, this works like a simple bang-bang controller. The design is very similar to the braking pressure system: $v_{dif}$ is again fed into a one-dimensional lookup table, which outputs different values for traction force accordingly. The higher $v_{dif}$ is, the higher the traction force to apply. It is then added to the current braking force, however only either traction or braking force is at any given time positive while the other is zero, which is achieved by the equations
+Equation \ref{eq:lookuptable2} shows an example for how the function for the table might look like. The key difference to the calculation of the braking pressure is that the output values of the function are coefficients which are then multiplied with the maximum possible traction force, rather than raw values like in equation \ref{eq:lookuptable}. This part of the system is marked by the red rectangle. 
+\par
+Remember that we have established the train is at any given time either accelerating or decelerating. Since there is, as previously discussed, already a system in place to determine whether the train should engage its brakes, it now suffices to make the following examination: If the train is generating a braking force, i.e. $F_{b}$ is greater than zero, it will apply no traction force, and vice versa.
  
 \begin{equation}
 \label{eq:tracforce}
-f(n,t) = H(n) * (F_{B}(t) == 0) 
+F_{t}(n,t) = (H(n) \cdot F_{t,max}) \cdot (F_{b}(n,t) == 0) 
 \end{equation}
 
 \noindent
-where $n$ is $v_{dif}$, $H(n)$ is the lookup table function (see equation \ref{eq:lookuptable}), $F_{B}(t)$ is the braking force over time, and 
+Equation \ref{eq:tracforce} describes the logic. $F_{b}(t) == 0$ is a relational operation, the result being either 1 if there is a braking force at a particular point in time $t$, otherwise 0. We can apply the same logic to the braking force $F_{b}$:
 
 \begin{equation}
 \label{eq:brakeforce}
-g(t) = F_{B}(t) * (F_{B}(t) \neq 0)
+F_{b}(n,t) = F_{B}(n,t) \cdot (F_{b}(n,t) \neq 0)
 \end{equation}
 
 \noindent
-where $F_{B}(t)$ is the braking force over time, so we have 
+With equations \ref{eq:tracforce} and \ref{eq:brakeforce} we can now determine the actual force applied at any given point in time $t$:
 
 \begin{equation}
 \label{eq:force}
-F(n,t) = f(n,t) + g(t) 
+F(n,t) = F_{t}(n,t) + F_{b}(n,t) 
 \end{equation} 
 
 \noindent
-where $F$ is the actual force over time, either braking or traction.
-
+Since either of the summands is always zero, equation \ref{eq:force} outputs either the traction force or the braking force being applied at a point in time $t$, for a value of $v_{dif}$ $n$. This part of the system is marked by the blue rectangle, and together with the brake valve completes the system responsible for controlling the train.
 \par\noindent
-$F$ is then used to calculate acceleration. According to Newton's Second Law,
+Let's reach back to our model ${\mathcal{M}}$ from chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, in particular to three elements of its set of model variables $\{{\mathcal{V}}\}$: The train's acceleration $a$, its velocity $v$, and its braking distance $d$. Since we can now determine the applied force $F(n,t)$, it is now also possible to calculate the values of these three variables.
+
 \begin{equation}
 \label{eq:newton}
-F = m * a
+F = m \cdot a
 \end{equation}
-Accordingly, acceleration is
+
+\noindent
+Once again making use of Newton's second law of motion, we may calculate the value of $a$ by substituting $F(n,t)$ for $F$, and the combined mass of all wagons $m_{total}$ for $m$:
+
 \begin{equation}
 \label{eq:acceleration}
-a = F(n,t) / m
+a = \frac{F(n,t)}{m_{total}}
 \end{equation}
 	
 \noindent
-where $m$ is the accumulated mass of all wagons and $F(n,t)$ relates to equation \ref{eq:force}. The acceleration is then used to calculate the velocity by integrating $a$ in relation to $v_{0}$, which is the initial velocity of the current braking or acceleration process \TODO{überprüfen..}. Integration of $v$ in turn allows calculation of the traveled distance.
+The train's velocity may now be calculated by integration of its acceleration $a$. In simulink, this is achieved by feeding the signal value of $a$ into a continuous-time integration block:
+
+\begin{equation}
+\label{eq:velocity}
+v = \int a \; da
+\end{equation}
+
+\noindent
+Finally, the train's braking distance can be calculated by integration of its velocity $v$. This is once again achieved by usage of a continuous-time integration block:
+
+\begin{equation}
+\label{eq:distance}
+d = \int v \; dv
+\end{equation}
+
+\noindent
+This part of the system is marked by the green rectangle. This also completes the description of this subsystem. Looking back at our model ${\mathcal{M}}$, the last elements of $\{{\mathcal{V}}\}$ left to deal with are the brake pipe ${\mathcal{M}}_{bp}$, the brake cylinder ${\mathcal{M}}_{bc}$, the wagon mass $m$, the train composition $comp$, and finally the braking force $F_{b}$.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{./pic/expandedmodel_brakepipe}
+	\caption{Expanded Model - Brake Pipe}
+	\label{fig:expandedmodel_brakepipe}
+\end{figure}
+
+\par\noindent
+Figure \ref{fig:expandedmodel_brakepipe} shows how the wagons (marked by red rectangles) are interconnected by the brake pipe (marked by green arrows). This is analogous to how the wagons were connected in the initial model from section \ref{sec:InitialModel}.  
 
 \begin{figure}[H]
 	\centering
@@ -175,13 +204,61 @@ where $m$ is the accumulated mass of all wagons and $F(n,t)$ relates to equation
 \end{figure}
 
 \par\noindent
-The last subsystem is the actual wagon. We will take a look at the largely unchanged elements first. The sole input is still the braking pressure on the brake pipe. Simulation of the propagation delay has also remained the same as before. 
-
+Figure \ref{fig:expandedmodel_wagon} shows the expanded model of the freight wagon. There are components which have remained largely unchanged, while others have been added or altered to account for for the changes required to implement ${\mathcal{M}}$. To recapitulate, the initial model's freight wagon comprised of three components: The brake cylinder ${\mathcal{M}}_{bc}$, the brake pipe ${\mathcal{M}}_{bp}$, and the driving resistance. The implementation of the brake pipe has remained largely unchanged, the only exception being the addition of a dead zone to filter out very small values of $p_{bp}$, ranging from $-0.005$ to $0.005$. This was necessary as these small values interfered with the simulation result in a negative way. The implementation of the brake pipe ${\mathcal{M}}_{bp}$ is marked by the green rectangle.
 \par
-One new addition is a pool of different wagons. Whereas before all 40 were distinguishable only by their position, they are now assigned with different parameters. To that end, a pool of 500 wagons has been randomly generated via python script, where each wagon has a unique ID, as well as randomly generated mass and braking efficiency. In actual simulation, up to 40 of these 500 are, currently by generation of random indices, selected and their properties used accordingly. It would also be possible to determine the wagon ids to be used beforehand, instead of choosing randomly.
+The implementation of the brake cylinder ${\mathcal{M}}_{bc}$ has also remained largely unchanged from the initial model, though the wagon's mass used to calculate $F_{b,max}$ is now read dynamically rather than being a static value (More on this later). The brake cylinder is marked by the red rectangle. The implementation of the calculation of the train's driving resistance has too remained unchanged except for the wagon's mass, used to determine the acceleration, being read dynamically, analogous to the brake cylinder. This component is marked by the yellow rectangle.
+\bigskip
+\par\noindent
+According to the definition of ${\mathcal{M}}$, the following factors still need to be accounted for: The wagon mass $m$, the train composition $comp$, the track gradient $\alpha$, and the wheel/rail friction coefficient $\mu$. It is therefore necessary to add new components implementing these to the wagon model.
+\par
+While the initial model's wagons did indeed have a mass, it had a static value, and it was the same for all 40 wagons, making them identical and indistinguishable from one another. This is of course undesirable as it poorly reflects reality. To make up for this flaw, a pool of 500 wagons has been randomly generated via python script:
+
+\bigskip
+\begin{python}
+import csv
+import random
+
+with open('pool.csv', 'w', newline='') as pool:
+	fieldnames = ['Wagon_ID', 'Mass', 'Braking_eff']
+	writer = csv.DictWriter(pool, fieldnames=fieldnames)
+	
+	writer.writeheader()
+	for i in range(0,500): 
+		mass = random.randrange(12000, 90000, 100)
+		braking_eff = round(random.uniform(0.75, 0.95),2)
+		writer.writerow({'Wagon_ID': i, 'Mass': mass, 'Braking_eff': braking_eff})
+\end{python}
+\bigskip
+
+\noindent
+This creates a table with 500 entries of the following structure:
+
+\bigskip
+\begin{tabular}{c|c|c}
+	Wagon\_ID & Wagon Mass & Braking Efficiency \\
+	\hline
+	0 & 53800 & 0.83 \\
+	\hline
+	1 & 60800 & 0.77 \\
+	\hline
+	... & ... & ... \\
+	\hline
+	499 & 66600 & 0.81 \\
+\end{tabular}
+\bigskip
+
+Each wagon contained in the pool is identifiable by its ID and has the properties wagon mass and braking efficiency, i.e. a characteristic for the integrity of its brakes. Both properties are randomly generated for each wagon, the mass being assigned a value between 12000 and 90000 kilograms (with a step size of 100 kilograms), and the braking efficiency following a uniform distribution between 75 and 95 percent integrity. In order to read the values from the table, during simulation, each of the 40 wagon subsystems generates a random index between 0 and 499, i.e. each wagon is assigned an ID. By utilizing two direct lookup table blocks, the row with the assigned ID is selected, and the corresponding values for mass and braking efficiency are read from the table. The implementation of this component is marked by the pink rectangle. The value of $m$ is then used to calculate $F_{b}$, $a$, the driving resistance, the maximum braking force before slip, and the overall mass of the train $m_{total}$. The value of the braking efficiency is multiplied with $F_{b}$, meaning a lower integrity will result in a lower effective braking force.
 
 \par
 Another requirement was to make the number of wagons variable. In the initial model, the modeled train had a fixed number of 40 wagons, therefore also 40 wagon subsystems. Unfortunately, simulink offers no way to disable certain subsystems dynamically, but only by manually turning them off via model explorer, which would be unfeasible for such a large number of simulations. To circumvent this issue, output gets disabled for all unwanted wagons. For a simulation of a train of 20 wagons, the first 20 remain untouched, while the latter 20 produce no output and therefore also have no impact on the overall simulation. The turning off is achieved by simple switches; each wagon subsystem has a unique index from one to forty. If the index is greater than the specified number of wagons, all switches are turned to output zero.
 	
 \section{Further Expansion}
 \label{sec:FurtherExpansion}
+
+\bigskip\noindent\TODO{
+	\begin{itemize}
+		\item more complex calculation of braking pressure, factoring in things like pad/block friction coefficient, brake radius etc
+		\item curve resistance
+		\item different braking systems
+	\end{itemize}
+}

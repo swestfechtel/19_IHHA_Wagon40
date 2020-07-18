@@ -38,6 +38,7 @@
 \usepackage{mathtools}
 \usepackage{ulem}
 \usepackage{csquotes}
+\usepackage{pythonhighlight}
 %\usepackage{hyperref}
 %\usepackage[cache=false]{minted}
 
@@ -95,7 +96,7 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \definecolor{ocker}{rgb}{0.92,0.68,0.2}
 
-\lstset{
+\newcommand\matlabstyle{\lstset{
   language=matlab,
   aboveskip=10mm,
   belowskip=10mm,
@@ -108,7 +109,36 @@
   numberstyle=\color{ocker},
   breaklines=true,
   tabsize=3
+}}
+
+\lstnewenvironment{matlab}[1][]
+{
+	\matlabstyle
+	\lstset{#1}
 }
+{}
+
+%\newcommand\pythonstyle{\lstset{
+%		language=Python,
+%		basicstyle=\ttm,
+%		otherkeywords={self},             % Add keywords here
+%		keywordstyle=\ttb\color{deepblue},
+%		emph={MyClass,__init__},          % Custom highlighting
+%		emphstyle=\ttb\color{deepred},    % Custom highlighting style
+%		stringstyle=\color{deepgreen},
+%		frame=tb,                         % Any extra options here
+%		showstringspaces=false            % 
+%}}
+%
+%
+%% Python environment
+%\lstnewenvironment{python}[1][]
+%{
+%	\pythonstyle
+%	\lstset{#1}
+%}
+%{}
+
 
 % Inhalt
 %\renewcaptionname{ngerman}{\contentsname}{Inhalt} % Umbenennung in Inhalt
