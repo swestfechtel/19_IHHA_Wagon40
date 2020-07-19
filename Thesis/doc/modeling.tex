@@ -247,18 +247,43 @@ This creates a table with 500 entries of the following structure:
 \end{tabular}
 \bigskip
 
-Each wagon contained in the pool is identifiable by its ID and has the properties wagon mass and braking efficiency, i.e. a characteristic for the integrity of its brakes. Both properties are randomly generated for each wagon, the mass being assigned a value between 12000 and 90000 kilograms (with a step size of 100 kilograms), and the braking efficiency following a uniform distribution between 75 and 95 percent integrity. In order to read the values from the table, during simulation, each of the 40 wagon subsystems generates a random index between 0 and 499, i.e. each wagon is assigned an ID. By utilizing two direct lookup table blocks, the row with the assigned ID is selected, and the corresponding values for mass and braking efficiency are read from the table. The implementation of this component is marked by the pink rectangle. The value of $m$ is then used to calculate $F_{b}$, $a$, the driving resistance, the maximum braking force before slip, and the overall mass of the train $m_{total}$. The value of the braking efficiency is multiplied with $F_{b}$, meaning a lower integrity will result in a lower effective braking force.
-
+\noindent
+Each wagon contained in the pool is identifiable by its ID and has the properties wagon mass and braking efficiency, i.e. a characteristic for the integrity of its brakes. Both properties are randomly generated for each wagon, the mass being assigned a value between 12000 and 90000 kilograms (with a step size of 100 kilograms), and the braking efficiency following a uniform distribution between 75 and 95 percent integrity. In order to read the values from the table, during simulation, each of the 40 wagon subsystems generates a random index between 0 and 499, i.e. each wagon is assigned an ID. By utilizing two direct lookup table blocks, the row with the assigned ID is selected, and the corresponding values for mass and braking efficiency are read from the table. The implementation of this component is marked by the pink rectangle. The value of $m$ is then used to calculate $F_{b}$, $a$, the driving resistance, the maximum braking force before slip, and the overall mass of the train $m_{total}$. The value of the braking efficiency is multiplied with $F_{b}$, meaning a lower integrity will result in a lower effective braking force. This component is marked by the blue polygon.
 \par
-Another requirement was to make the number of wagons variable. In the initial model, the modeled train had a fixed number of 40 wagons, therefore also 40 wagon subsystems. Unfortunately, simulink offers no way to disable certain subsystems dynamically, but only by manually turning them off via model explorer, which would be unfeasible for such a large number of simulations. To circumvent this issue, output gets disabled for all unwanted wagons. For a simulation of a train of 20 wagons, the first 20 remain untouched, while the latter 20 produce no output and therefore also have no impact on the overall simulation. The turning off is achieved by simple switches; each wagon subsystem has a unique index from one to forty. If the index is greater than the specified number of wagons, all switches are turned to output zero.
-	
-\section{Further Expansion}
-\label{sec:FurtherExpansion}
+The next element of ${\mathcal{V}}$ to address is the train composition $comp$. In the initial model, $comp$ is static, meaning the train is always comprised of 40 identical wagons. There is now a system in place that allows for wagons with diverse properties; we now need to design a system that allows for a variable number of wagons. In the simulink model, the train is made up of 40 subsystems, each representing one freight wagon. The obvious approach would be only having as many of these systems as desired, e.g. for a train consisting of 27 wagons, there would only be 27 wagon subsystems in the model. Since simulink however offers no straightforward way of adding or removing subsystems during simulation, a workaround is necessary. The solution taken here is using switch blocks to set output to zero for all unwanted subsystems, effectively removing their impact on the simulation. Each of the 40 models is assigned a constant representing their position; for each simulation, the desired number of wagons the train should encompass is specified as simulation input. During simulation, each subsystem compares this value to its position index. If their index is greater than the desired number of wagons, the switch blocks are set to output zero. For example, take a train of 15 wagons. The subsystems with position indices one to 15 will produce output, and the subsystems with indices 16 to 40 will not. This component is marked by the cyan rectangle.
+\par
+The track gradient $\alpha$ is used to calculate the additional braking or traction force resulting from the track's pitch angle. 
+
+\begin{equation}
+\label{eq:inclinationforce}
+F_{N} = G_{F,Z} \cdot f_{N}
+\end{equation}
+
+\noindent
+Equation \ref{eq:inclinationforce} is used to calculate the inclination force $F_{N}$, where $G_{F,Z} = m \cdot 9.81$ is the weight force acting on the wagon, and $f_{N} = \sin(\alpha)$ is the inclination force number [wende, 95]. Accordingly, this force is calculated during simulation and then added to (or subtracted from) the generated braking force $F_{b}$ to determine the effective braking force, taking into account the slope of the train track. This component is marked by the black rectangle.
+\par
+As mentioned in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, the wheel/rail friction coefficient $\mu$ determines how much braking force may be applied before sliding occurs, negatively impacting the braking performance. Since the exact mechanics of how sliding affects the braking process go beyond the scope of this work, a different approach has been chosen to incorporate $\mu$.
+
+\begin{equation}
+\label{eq:frictioncoefficient}
+F_{b,e} = F_{b,max} \cdot \mu
+\end{equation}
+
+\noindent
+Equation \ref{eq:frictioncoefficient} is used to calculate the braking force before sliding would occur, $F_{b,e}$ by multiplying the maximum possible braking force $F_{b,max}$ with the wheel/rail friction coefficient $\mu$. The result is then used to limit the applied braking force $F_{b}$ so that sliding is avoided, utilizing a saturation dynamic block. This still satisfies $R_{\mu,F_{b}} \in \{ {\mathcal{R}} \}$. This component is marked by the brown rectangle.
+\bigskip
+\par\noindent
+This completes the description of the simulink model. Reaching back to chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, all elements of $\{ {\mathcal{V}} \}$, $\{ {\mathcal{R}} \}$ and $\{ c \}$ have been accounted for, and we can therefore conclude our theoretical model ${\mathcal{M}}$ has been implemented. It may now be used for simulation and data generation.
+
+
+\section{Outlook}
+\label{sec:Outlook}
 
 \bigskip\noindent\TODO{
 	\begin{itemize}
 		\item more complex calculation of braking pressure, factoring in things like pad/block friction coefficient, brake radius etc
 		\item curve resistance
 		\item different braking systems
+		\item friction coefficient slip
 	\end{itemize}
 }
