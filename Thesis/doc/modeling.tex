@@ -275,15 +275,26 @@ Equation \ref{eq:frictioncoefficient} is used to calculate the braking force bef
 \par\noindent
 This completes the description of the simulink model. Reaching back to chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, all elements of $\{ {\mathcal{V}} \}$, $\{ {\mathcal{R}} \}$ and $\{ c \}$ have been accounted for, and we can therefore conclude our theoretical model ${\mathcal{M}}$ has been implemented. It may now be used for simulation and data generation.
 
-
 \section{Outlook}
 \label{sec:Outlook}
 
-\bigskip\noindent\TODO{
-	\begin{itemize}
-		\item more complex calculation of braking pressure, factoring in things like pad/block friction coefficient, brake radius etc
-		\item curve resistance
-		\item different braking systems
-		\item friction coefficient slip
-	\end{itemize}
-}
+\par\noindent
+While the model defined in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering} satisfies the requirements for this work, there are many more factors that might be incorporated in order to achieve a more accurate representation of reality. Some of these factors shall be discussed here briefly. So far, the generated braking force $F_{b}$ is calculated by transforming the braking pressure $p_{bp}$ into a coefficient, and applying that coefficient to the maximum braking capacity $F_{b,max}$.
+
+\begin{equation}
+\label{eq:brakingforceadjusted}
+F_{b} = \xi \cdot \sum P_{N}
+\end{equation}
+
+\noindent
+Equation \ref{eq:brakingforceadjusted} offers a more detailed way of calculating $F_{b}$, where $\sum P_{N}$ is the sum of all applying forces actuating the brake shoes on the wheel tread, or the brake pads against the discs, respectively; the proportionality coefficient $\xi$ might be the friction coefficient between the brake shoes and the wheel, or
+
+\begin{equation}
+\label{eq:xi}
+\xi = \frac{4 \cdot r_{m}}{D_{o}} \cdot \mu_{d}
+\end{equation}
+
+\noindent
+for disc brakes, where $r_{m}$ is the medium friction radius, $D_{o}$ is the wheel diameter, and $\mu_{d}$ is the friction coefficient between brake pad and disk [train braking, 23].
+\par
+As the focus of this work lies on the braking process, the modeling of traction force is kept rather simple. It might however be desirable to create a more sophisticated model, in order to achieve a more realistic result. For example, as of right now, the applied traction force depends only on the discrepancy between current and maximum velocity; in reality, the maximum traction force is also limited by wheel/rail adhesion just as the braking force is [wende, 157]. One might also want to factor in differences between various engines.
