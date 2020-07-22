@@ -1,7 +1,12 @@
 \chapter{Data Generation}
 \label{chap:DataGeneration}
 \par\noindent
-\textit{\textbf{Introduction}} With the finished model, it is now possible to generate the actual data, via simulation. For this purpose, a matlab script initializes all relevant model parameters and feeds the simulation input, in this case the previously discussed track profile, into the model. 
+\textit{\textbf{Introduction}} The implemented model may now be utilized to simulate braking processes, generating output data describing the behavior of the train during the process. 
+
+\section{Simulation}
+\label{sec:Simulation}
+\par\noindent
+To recapitulate: We have defined a theoretical model for a train's braking process in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, and implemented this model in simulink in chapter \ref{chap:ModelingOfTrainOperations}. The aim of this work, however, is not only building a model, but also generating a data set describing the train's behavior during its phases of breaking. We can utilize simulink to run a large number of simulations with varying combinations of input parameters. Each simulation represents one train ride, each ride consisting of multiple phases of accelerating, braking and keeping velocity. 
 
 \begin{figure}[H]
 	\centering
@@ -11,78 +16,90 @@
 \end{figure}
 
 \par\noindent
-Figure \ref{fig:siminput} visualizes how a track profile might look like. It stipulates the maximum allowed velocity for discrete points in time; the train either brakes or accelerates accordingly in order to match the corresponding value. An example: Let the simulation time be 1200 seconds, and $v_{max}(1200)=20 \; \frac{m}{s}$. Let the train's velocity $v$ be $25 \; \frac{m}{s}$. The train will engage its brakes (or continue braking, if they have already been engaged) in order to bring $v$ down to $20 \; \frac{m}{s}$. If $v$ were $15 \; \frac{m}{s}$, the train would accelerate instead.
+Figure \ref{fig:siminput} visualizes how a track profile might look like. It stipulates the maximum allowed velocity for discrete points in time, as well as the overall duration of the simulation; the train either brakes or accelerates accordingly in order to match the corresponding value. An example: Let the simulation time be 1200 seconds, and $v_{max}(1200)=20 \; \frac{m}{s}$. Let the train's velocity $v$ be $25 \; \frac{m}{s}$. The train will engage its brakes (or continue braking, if they have already been engaged) in order to bring $v$ down to $20 \; \frac{m}{s}$. If $v$ were $15 \; \frac{m}{s}$, the train would accelerate instead. The track profile is one of many input parameters, all of which determine the course of the simulation. 
 
 \section{Matlab Code}
 \label{sec:MatlabCode}
 \par\noindent
-We need to do some general configuration first, like clearing the workspace off all output which might still be present from previous simulations. 
+A matlab script is used to configure the simulation input, execute the simulation, and write the simulation output into a tabulator-separated file. At the start of execution, the workspace (where variables are stored) should be cleared. Also, the number of cores to use for parallel processing must be set (more on this later):
 
+\bigskip
 \begin{python}
 clear all
 clc
 warning ('off','all');
 numcores = 10;
 \end{python}
+\bigskip
 
+\noindent
+Generally speaking, simulation input can be divided into two categories: static and dynamic parameters. They, for the most part, correspond to the constants and variables defined in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}. The static parameters, i.e. constants, remain the same for every single simulation run, while the dynamic parameters, i.e. variables, may be different for any two simulation runs.
+
+\bigskip
+\begin{python}
+RBD = 5; 
+VBD = 3.5; 
+l = 18; 
+c = 250; 
+\end{python}
+\bigskip
+
+\noindent
+These constants all correspond to the brake pipe ${\mathcal{M}}_{bp}$, where $RBD$ is the regular operations pressure (i.e. the pressure on the brake pipe when brakes are disengaged), $VBD$ is the full breaking pressure (i.e. the pressure on the brake pipe when brakes are fully engaged), $l$ is the physical length of the brake pipe $l_{bp}$ (although $l_{bp}$ is defined as a variable in ${\mathcal{M}}_{bp}$, it is assumed all wagons have the same physical length for the sake of simplicity), and $c$ is the propagation velocity of the pipe's medium $v_{bp}$.
+
+\bigskip
+\begin{python}
+tf = 4;
+tl = .1;
+\end{python}
+\bigskip
+
+\noindent
+\TODO{}
+
+\bigskip
+\begin{python}
+p0 = 0;
+Pres = 0/1000*[5.7/771 0 1.6];
+alpha = 0.9;
+BPnum = [0.3 alpha];
+BPden = [1 alpha];
+\end{python}
+\bigskip
+
+\noindent
+\TODO{}
 \par\noindent
-We then need to initialise all constants which values remain the same for all simulations. Please refer to the code snippet below for descpriptions:
+All static parameters have now been initialized. They, along with the track profile, will remain unchanged for all simulations; what sets any two simulations apart is their variable input parameters.
 
-\bigskip\noindent\TODO{
-	change all code environments to python, remove comments or make modification of package pythonhighlight for matlab
-}
+\bigskip
+\begin{python}
+tmax = 3600;
+nmax = tmax * 2;
+t = linspace(0, tmax, nmax);
+u = [10*ones(1000*2,1); 15*ones(500*2,1); 25*ones(1200*2,1); 12*ones(600*2,1); 0*ones(300*2,1)];
+simin.time = t;
+simin.signals.values = u;
 
-\begin{matlab}
-%% Constants
+trackgradient = 0;
+\end{python}
+\bigskip
 
-RBD = 5; % regular operations pressure (bar)
-VBD = 3.5; % full breaking pressure (bar)
+\noindent
+The code above shows the definition of the track profile. \pyth{tmax} specifies the duration of the simulation in seconds, so in this case one hour. \pyth{nmax} is number of discrete data points; with \pyth{nmax = tmax * 2}, there are on average two data points for every one second of simulation time. \pyth{t} is a linearly spaced vector, i.e. a vector of \pyth{nmax} evenly spaced points between 0 and \pyth{tmax}, which is then set as time input using \pyth{simin.time = t;}. \pyth{u} is the vector which holds the data points, with the number of data points being equal to the value of \pyth{nmax}. The data points stipulate the maximum allowed velocity $v_{max}$ for every discrete point in time. For example, \pyth{10*ones(1000*2,1);} means that for the first 2000 points in time, or for the first 1000 seconds of simulation time, the value of $v_{max}$ is $10 \; \frac{m}{s}$. Continuing with the above example, $v_{max}$ then increases to $15 \; \frac{m}{s}$ for the next 1000 points in time, or the next 500 seconds of simulation time. This vector \pyth{u} is then set as input signal using \pyth{simin.signals.values = u;}. Finally, \pyth{trackgradient = 0;} specifies the average gradient of the track (in this case, the track neither goes uphill, nor downhill).
+\par
+The goal is to create large quantities of data, i.e. at least hundreds of gigabytes. Since one single simulation run takes, on average, five seconds to complete, and one simulation run produces approximately one megabyte of output data, producing 500 gigabytes worth of data would take 2,500,000 seconds, or almost 29 days. Obviously, this is not acceptable. Fortunately, simulink simulations may be run in parallel, where hardware is the limiting factor rather than time. Albeit, simulations are very expensive, and one will quickly run out of memory if too many simulations are run simultaneously (Using 20 cores, i.e. running 20 simulation in parallel, lead to the server freezing up). Using too many cores also lead to the matlab engine timing out, though whether this was due to memory restrictions or limitations of the engine is unclear. Anyway, using ten CPU cores for parallel processing proved to be stable.
 
-l = 18; % wagon length (meters)
-c = 250; % propagation velocity (km/h)
-
-tf = 4; % brake cylinder filling time
-tl = .1; 
-
-p0 = 0; % initial pressure
-Pres = 0/1000*[5.7/771 0 1.6]; % strahl formula for m/s velocity
-
-alpha = 0.9; 
-
-BPnum = [0.3 alpha]; 
-BPden = [1 alpha]; 
-
-%% Simulation input
-tmax = 3600; % simulation time (seconds)
-nmax = tmax * 2; % number of data points
-t = linspace(0, tmax, nmax); % simulation time input
-u = [20*ones(800*2,1); 27*ones(800*2,1); 15*ones(600*2,1); 10*ones(400*2,1); 
-	22*ones(900*2,1); 0*ones(100*2,1)]; % track profile
-simin.time = t; % set simulation time input
-simin.signals.values = u; % set simulation signal input
-
-trackgradient = 0; % pitch angle
-\end{matlab}
-
-\par\noindent
-After having initialised all necessary constants, we now get to configuring variable simulation input.
-
-\begin{matlab}
-pool = readmatrix('pool.csv'); % read wagon pool
-mkdir output; % make output directory
-
-wagons = 1:1:40; % create array for number of wagons to loop over
-friction = 0.05:0.01:0.78; % create array for friction coefficient to loop over
-tracforce = 200000:1000:400000; % create array for traction force to loop over
-
-track = 1; % counter to index input array for one batch of simulations
-allruns = 1; % counter to keep track of total number of simulations completed
-
-for i = length(tracforce):-1:1 		% all possible combinations of traction force,
-	for j = length(friction):-1:1 	% friction coefficient and
-		for k = length(wagons):-1:1 % number of wagons
-			% save all previously initialised constans and sim input into
-			% one array in
+\bigskip
+\begin{python}
+wagons = 1:1:40;
+friction = 0.05:0.01:0.78;
+tracforce = 200000:1000:400000;
+track = 1;
+allruns = 1;
+for i = length(tracforce):-1:1
+	for j = length(friction):-1:1
+		for k = length(wagons):-1:1
 			in(track) = Simulink.SimulationInput('Simulation_v2');
 			in(track) = in(track).setVariable('num_wagons',wagons(k));
 			in(track) = in(track).setVariable('fc',friction(j));
@@ -107,49 +124,17 @@ for i = length(tracforce):-1:1 		% all possible combinations of traction force,
 			in(track) = in(track).setVariable('u',u);
 			in(track) = in(track).setVariable('VBD',VBD);
 			
-			% also save the respective values for traction force and
-			% friction coefficient into arrays
 			Ft(track) = tracforce(i);
 			fc(track) = friction(j);
-			
-			track = track + 1;       
+	
+			track = track + 1;        
 		end
 	end
-	
-	fprintf('Starting pool for %d simulation runs.\n',length(in));
-	parpool(numcores); % create a pool of #numcores workers for parallel processing
-	out = parsim(in,'ShowProgress','on'); 	
-	% start parallel simulations for all
-	% entries of in, save output to out
-											
-	matrix = []; % create an empty matrix
-	
-	parfor l = 1:1:length(out) 	
-	% parallel loop over out, which is an array that
-	% holds all simulation outputs
-	
-		tmp = Write(l + allruns,out(l).get('velocity'),out(l).get('force')
-			,out(l).get('pressure'),out(l).get('distance'),
-			out(l).get('acceleration_neg'),out(l).get('ids'),t,u,
-			trackgradient,Ft(l),fc(l)); % for each entry, pack all output into one single matrix
-		matrix = [matrix;tmp]; % append to matrix
-	end
-	
-	allruns = allruns + length(out); % update total number of simulations
-
-	writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append',
-		'Delimiter','tab'); 
-	% write matrix, which holds all output matrices of the 
-	% current batch, to a tsv file
-
-	track = 1; % reset batch index 
-	delete(gcp('nocreate')); % delete parallel pool
-	fprintf('Run %d (of %d total) complete.\n',length(tracforce)-i,length(tracforce));
-end
-\end{matlab}
+\end{python}
+\bigskip
 
 \par\noindent
-As our aim is to generate large quantities of data, it becomes feasible to use use parallel processing for our simulations. For this purpose, we need to create an array to hold input for all simulation runs. There are three variables which change for each run, they are traction force of the locomotive, wheel/rail friction coefficient and number of wagons, respectively. A nested loop is used to create all possible combinations of these variables, and each single combination gets stored, as a new entry, in the array which holds all input.
+ For this purpose, we need to create an array to hold input for all simulation runs. There are three variables which change for each run, they are traction force of the locomotive, wheel/rail friction coefficient and number of wagons, respectively. A nested loop is used to create all possible combinations of these variables, and each single combination gets stored, as a new entry, in the array which holds all input.
 \par
 Variable ranges are from one to 40 for number of wagons, .05 to .78 for friction coefficient and 200000 to 400000 for traction force, with step sizes one, .01 and 1000 respectively. We therefore have a total number of $40*74*200 =  592000$ combinations. The obvious approach here would be to generate the full batch of 592000 input configurations, but performance and hardware limitations proved this to be unfeasible. Instead, we use rather small batche sizes of 2960 for parallel simulation.
 \par
