@@ -95,6 +95,14 @@ The goal is to create large quantities of data, i.e. at least hundreds of gigaby
 wagons = 1:1:40;
 friction = 0.05:0.01:0.78;
 tracforce = 200000:1000:400000;
+\end{python}
+\bigskip
+
+\noindent
+The remaining elements of $\{{\mathcal{V}}\}$ left to address are wagon mass $m$, train composition $comp$, and wheel/rail friction coefficient $\mu$; furthermore, the maximum traction force the locomotive can generate. The wagon mass is handled by the wagon pool (section \ref{sec:ModelExpansion} and thus is not part of the matlab script. All possible combinations of the remaining three variables are created using nested loops. Their values range from one to forty for the number of wagons ($comp$), step size one, 0.05 to 0.78 for wheel/rail friction coefficient ($\mu$), step size 0.01, and 200,000 to 400,000 for traction force, step size 1,000. Therefore, the total number of possible combinations is $40 \cdot 74 \cdot 200 = 592000$, i.e. for every distinct track profile, there is 592,000 simulation runs.   
+
+\bigskip
+\begin{python}
 track = 1;
 allruns = 1;
 for i = length(tracforce):-1:1
@@ -107,43 +115,52 @@ for i = length(tracforce):-1:1
 			
 			in(track) = in(track).setVariable('alpha',alpha);
 			in(track) = in(track).setVariable('BPden',BPden);
-			in(track) = in(track).setVariable('BPnum',BPnum);
-			in(track) = in(track).setVariable('c',c);
-			in(track) = in(track).setVariable('l',l);
-			in(track) = in(track).setVariable('nmax',nmax);
-			in(track) = in(track).setVariable('p0',p0);
-			in(track) = in(track).setVariable('pool',pool);
-			in(track) = in(track).setVariable('Pres',Pres);
-			in(track) = in(track).setVariable('RBD',RBD);
-			in(track) = in(track).setVariable('simin',simin);
-			in(track) = in(track).setVariable('t',t);
-			in(track) = in(track).setVariable('tf',tf);
-			in(track) = in(track).setVariable('tl',tl);
-			in(track) = in(track).setVariable('tmax',tmax);
-			in(track) = in(track).setVariable('trackgradient',trackgradient);
-			in(track) = in(track).setVariable('u',u);
+			...
 			in(track) = in(track).setVariable('VBD',VBD);
 			
 			Ft(track) = tracforce(i);
 			fc(track) = friction(j);
-	
+			
 			track = track + 1;        
 		end
 	end
 \end{python}
 \bigskip
 
-\par\noindent
- For this purpose, we need to create an array to hold input for all simulation runs. There are three variables which change for each run, they are traction force of the locomotive, wheel/rail friction coefficient and number of wagons, respectively. A nested loop is used to create all possible combinations of these variables, and each single combination gets stored, as a new entry, in the array which holds all input.
-\par
-Variable ranges are from one to 40 for number of wagons, .05 to .78 for friction coefficient and 200000 to 400000 for traction force, with step sizes one, .01 and 1000 respectively. We therefore have a total number of $40*74*200 =  592000$ combinations. The obvious approach here would be to generate the full batch of 592000 input configurations, but performance and hardware limitations proved this to be unfeasible. Instead, we use rather small batche sizes of 2960 for parallel simulation.
-\par
-Writing of the output is also done in smaller batches. The best approach to minimize the number of file accessions is of course writing everything into one big matrix, thus storing in RAM, and then writing the matrix in one go. Unfortunately, growing an array by assignment or concatenation can be expensive. For large arrays, MATLAB must allocate a new block of memory and copy the older array contents to the new array as it makes each assignment. The other extreme would of course be to write every single output line directly, but the large number of file accessions required makes this even more unfeasible, so a middle ground is needed, and a batch size of ~3000 works relatively well, although this could surely be optimized with a bit of runtime analysis.
-\par
-The function below compresses all output of one single simulation into one matrix. Raw simulation output consists of a few time-series objects, like braking force and braking pressure, as well as some metadata. These objects are fed into the write function, which does as many loops as there are rows in the time-series objects. It then packs all rows from each time-series into one big row, adds the meta-data and appends the large row to the matrix, which gets returned at the end. Refer to section \ref{sec:DataStructure} for a more detailed look at the structure of the output matrix.
+\noindent
+An array to hold all simulation input is created using \pyth{in(track) = Simulink.SimulationInput('Simulation_v2');} in the innermost for-loop. Each array field holds the input data for one simulation run. These parameters are set using \pyth{in(track) = in(track).setVariable(var);}, where \pyth{var} are all the constants and variables previously defined. \pyth{Ft(track)} and \pyth{fc(track)} hold the value for traction force and wheel/rail friction coefficient for each simulation, since these values can not be found in the simulation output.
 
-\begin{matlab}
-function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,t,u,grad,ft,fc)
+\bigskip
+\begin{python}
+	parpool(numcores);
+	out = parsim(in,'ShowProgress','on');
+\end{python}
+\bigskip
+
+\noindent
+Creating one large array for all 592,000 simulations leads to the matlab engine freezing, presumably due to running out of memory, so a smaller batch size is used. After the two inner for-loops have elapsed, i.e. array size is $74 \cdot 40 = 2960$ entries, a pool of ten parallel workers is created, and the input array is passed to the matlab engine for simulation, using \pyth{out = parsim(in);}. The simulation output is stored in \pyth{out}, which is also an array with 2960 entries.
+
+\bigskip
+\begin{python}
+	matrix = [];
+	parfor l = 1:1:length(out)
+		tmp = Write(l + allruns,out(l).get('velocity'),out(l).get('force'),out(l).get('pressure'),out(l).get('distance'),out(l).get('acceleration_neg'),out(l).get('ids'),u,trackgradient,Ft(l),fc(l));
+		matrix = [matrix;tmp];
+	end
+	allruns = allruns + length(out);
+	writematrix(matrix,'output/output2.tsv','FileType','text','WriteMode','append','Delimiter','tab');
+	track = 1;
+	delete(gcp('nocreate'));
+end
+\end{python}
+\bigskip
+
+\noindent
+Writing of the output is also done in smaller batches. The best approach to minimize the number of file accessions is of course writing everything into one big matrix (592,000 times ~300 output lines per simulation would result in a 177,600,000 line matrix!), thus storing in memory, and then writing the matrix in one go. Unfortunately, growing an array by assignment or concatenation can be expensive. For large arrays, matlab must allocate a new block of memory and copy the older array contents to the new array as it makes each assignment. The other extreme would writing line by line, but the resulting large number of file accessions required makes this just as unfeasible (again, that would be approximately 177,600,000 file accessions!). Therefore, finding a middle ground is necessary, and a batch size of 2960, i.e. the size of one simulation batch, works relatively well, although this could surely be optimized with a bit of runtime analysis. To optimize resource usage, writing is also done in parallel. This is possible because each simulation is identifiable by a unique ID, and thus synchronicity is not required, i.e. the simulations need not be written in order. An empty matrix is created using \pyth{matrix = [];}. The \pyth{Write()} function compresses all different output parameters from one simulation into one temporary matrix \pyth{tmp} and appends this temporary matrix to the output \pyth{matrix}. After all 2960 simulation outputs have been stored into \pyth{matrix}, it gets written to an output tabulator-separated file, the track counter is reset to one, and the parallel pool gets deleted so that the next batch of simulations may be run.
+
+\bigskip
+\begin{python}
+function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,u,grad,ft,fc)
 	numrows = get(force,'Length');
 	wagon_ids = double(wagon_ids);
 	time = force.Time;
@@ -156,36 +173,30 @@ function ret = Write(id,velocity,force,pressure,distance,acceleration,wagon_ids,
 		a = getdatasamples(acceleration,i);
 		d = getdatasamples(distance,i);
 		
-		row = [id,time(i),f,p,v,a,d,wagon_ids,grad,ft,fc]; 	% TODO: add simulation input aka track profile to matrix
-		%		print wagon ids as list delimited by colon (,)
-		%		performance?
+		row = [id,time(i),f,p,v,a,d,wagon_ids,grad,ft,fc];
 		matrix = [matrix;row];
 	end
-	fprintf('Created output matrix for simid %d\n',id);
-	% writematrix(matrix,'output/output.tsv','FileType','text','WriteMode','append','Delimiter','tab');
-	% ret = 1;
-	% fprintf('Create output matrix for Simulation ID %d\n', id);
+	
 	ret = matrix;
 end
-\end{matlab}
-
-\begin{python}
-import csv
-import random
-
-with open('pool.csv', 'w', newline='') as pool:
-	fieldnames = ['Wagon_ID', 'Mass', 'Braking_eff']
-	writer = csv.DictWriter(pool, fieldnames=fieldnames)
-	
-	writer.writeheader()
-	for i in range(0,500): # create 500 randomized wagons
-		mass = random.randrange(12000, 90000, 100) # create random wagon mass between 12 t and 90 t with step size 100
-		braking_eff = round(random.uniform(0.75, 0.95),2) # create random braking efficiency as uniform distribution between 75 % and 95 %
-		writer.writerow({'Wagon_ID': i, 'Mass': mass, 'Braking_eff': braking_eff})
 \end{python}
+\bigskip
 
-\par\noindent
-The above python script is used to create a randomized pool of 500 wagons to be used in simulation. Each wagon has a unique id, a randomized mass, ranging between 12000 and 90000 kilograms, and a braking efficiency, which is a uniform distribution between .75 and .95.
+\noindent
+The \pyth{Write()} function takes all output parameters of a single simulation for its arguments. These are the unique ID of the simulation, a time-series object storing the train's velocity over the course of the simulation, a time-series object storing the wagons' applied braking force over the course of the simulation, a time-series object storing the wagons' braking pressure over the course of the simulation, a time-series object storing the train's traveled distance over the course of the simulation, a time-series object storing the wagons' acceleration over the course of the simulation, a vector storing the IDs of the wagons making up the train, a vector storing the track profile, the track gradient, the train's traction force, and the wheel/rail friction coefficient. The time-series objects all have the following general structure:
+
+\begin{tabular}{c|c|c|c}
+	Timestamp & Column 1 & Column 2 & Column n \\
+	\hline
+	0 & $a$ & $b$ & $c$ \\
+	\hline
+	... & ... & ... & ... \\
+	\hline
+	3600 & $x$ & $y$ & $z$ \\
+\end{tabular}
+
+\noindent
+For one simulation, all time-series objects have the line count, as well as the same timestamps, so it suffices to store the corresponding properties of one time-series object, using \pyth{numrows = get(force,'Length');} and \pyth{time = force.Time;}, respectively. An empty matrix is then created using \pyth{matrix = [];} which will store all output parameters. A for-loop is used to iterate over the time-series objects, creating a vector for each row that contains the simulation ID, the timestamp for the current row, the column values of all time-series objects for the current row, the wagon IDs, the track gradient, the traction force, and the wheel/rail friction coefficient. This vector is then appended to the overall matrix. After the for-loop has elapsed, the \pyth{matrix} object gets returned.
 
 \section{Data Structure}
 \label{sec:DataStructure}
