@@ -234,17 +234,23 @@ with open('pool.csv', 'w', newline='') as pool:
 This creates a table with 500 entries of the following structure:
 
 \bigskip
-\begin{tabular}{c|c|c}
-	Wagon\_ID & Wagon Mass & Braking Efficiency \\
-	\hline
-	0 & 53800 & 0.83 \\
-	\hline
-	1 & 60800 & 0.77 \\
-	\hline
-	... & ... & ... \\
-	\hline
-	499 & 66600 & 0.81 \\
-\end{tabular}
+\begin{table}[H]
+	\label{tab:wagonpool}
+	\centering
+	\begin{tabular}{c|c|c}
+		Wagon\_ID & Wagon Mass & Braking Efficiency \\
+		\hline
+		0 & 53800 & 0.83 \\
+		\hline
+		1 & 60800 & 0.77 \\
+		\hline
+		... & ... & ... \\
+		\hline
+		499 & 66600 & 0.81 \\
+	\end{tabular}
+	\caption{Wagon pool structure}
+\end{table}
+
 \bigskip
 
 \noindent
