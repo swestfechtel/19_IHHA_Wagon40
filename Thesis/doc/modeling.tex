@@ -30,7 +30,7 @@ Figure \ref{fig:initmodel_whole} shows a model of a freight train of fixed lengt
 \end{figure}
 
 \par\noindent
-Figure \ref{fig:expandedmodel_wagon} shows a model of a freight wagon. It already encompasses several of the model variables defined in section \ref{sec:InherentFactors}. The brake pipe ${\mathcal{M}}_{bp}$ is represented by the green arrows. It leads from input port (pink rectangle) to output port (yellow rectangle); the propagation delay is realized by a transport delay block (green rectangle), using propagation velocity $v_{bp}$ and wagon length $l_{bp}$. The brake pressure $p_{bp}$ is the value of the signal traveling through the connection. Note that in the simulation, the signal value for $p_{bp}$ is the difference between regular operating pressure and actual pressure, e.g. if simulated pressure on the brake pipe is 3.5 bar, the signal value is $3.5 - 5 = -1.5$.
+Figure \ref{fig:initmodel_wagon} shows a model of a freight wagon. It already encompasses several of the model variables defined in section \ref{sec:InherentFactors}. The brake pipe ${\mathcal{M}}_{bp}$ is represented by the green arrows. It leads from input port (pink rectangle) to output port (yellow rectangle); the propagation delay is realized by a transport delay block (green rectangle), using propagation velocity $v_{bp}$ and wagon length $l_{bp}$. The brake pressure $p_{bp}$ is the value of the signal traveling through the connection. Note that in the simulation, the signal value for $p_{bp}$ is the difference between regular operating pressure and actual pressure, e.g. if simulated pressure on the brake pipe is 3.5 bar, the signal value is $3.5 - 5 = -1.5$.
 \par
 The brake cylinder ${\mathcal{M}}_{bc}$ is represented by the red rectangle. The pressure on the brake pipe $p_{bp}$ is converted into a coefficient between zero and one, where zero equals no brakes applied, or $p_{bp} = 5$, and one equals full braking pressure, or $p_{bp} = 3.5$. The exact formula is this:
 
@@ -150,7 +150,7 @@ F(n,t) = F_{t}(n,t) + F_{b}(n,t)
 \end{equation} 
 
 \noindent
-Since either of the summands is always zero, equation \ref{eq:force} outputs either the traction force or the braking force being applied at a point in time $t$, for a value of $v_{dif}$ $n$. This part of the system is marked by the blue rectangle, and together with the brake valve completes the system responsible for controlling the train.
+Since either of the summands is always zero, equation \ref{eq:force} outputs either the traction force or the braking force being applied at a point in time $t$, for a value of $v_{dif} = n$. This part of the system is marked by the blue rectangle, and together with the brake valve completes the system responsible for controlling the train.
 \par\noindent
 Let's reach back to our model ${\mathcal{M}}$ from chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, in particular to three elements of its set of model variables $\{{\mathcal{V}}\}$: The train's acceleration $a$, its velocity $v$, and its braking distance $d$. Since we can now determine the applied force $F(n,t)$, it is now also possible to calculate the values of these three variables.
 
@@ -206,12 +206,12 @@ Figure \ref{fig:expandedmodel_brakepipe} shows how the wagons (marked by red rec
 \par\noindent
 Figure \ref{fig:expandedmodel_wagon} shows the expanded model of the freight wagon. There are components which have remained largely unchanged, while others have been added or altered to account for for the changes required to implement ${\mathcal{M}}$. To recapitulate, the initial model's freight wagon comprised of three components: The brake cylinder ${\mathcal{M}}_{bc}$, the brake pipe ${\mathcal{M}}_{bp}$, and the driving resistance. The implementation of the brake pipe has remained largely unchanged, the only exception being the addition of a dead zone to filter out very small values of $p_{bp}$, ranging from $-0.005$ to $0.005$. This was necessary as these small values interfered with the simulation result in a negative way. The implementation of the brake pipe ${\mathcal{M}}_{bp}$ is marked by the green rectangle.
 \par
-The implementation of the brake cylinder ${\mathcal{M}}_{bc}$ has also remained largely unchanged from the initial model, though the wagon's mass used to calculate $F_{b,max}$ is now read dynamically rather than being a static value (More on this later). The brake cylinder is marked by the red rectangle. The implementation of the calculation of the train's driving resistance has too remained unchanged except for the wagon's mass, used to determine the acceleration, being read dynamically, analogous to the brake cylinder. This component is marked by the yellow rectangle.
+The implementation of the brake cylinder ${\mathcal{M}}_{bc}$ has also remained largely unchanged from the initial model, though the wagon's mass used to calculate $F_{b,max}$ is now read dynamically rather than being a static value (more on this later). The brake cylinder is marked by the red rectangle. The implementation of the calculation of the train's driving resistance has too remained unchanged except for the wagon's mass, used to determine the acceleration, being read dynamically, analogous to the brake cylinder. This component is marked by the yellow rectangle.
 \bigskip
 \par\noindent
 According to the definition of ${\mathcal{M}}$, the following factors still need to be accounted for: The wagon mass $m$, the train composition $comp$, the track gradient $\alpha$, and the wheel/rail friction coefficient $\mu$. It is therefore necessary to add new components implementing these to the wagon model.
 \par
-While the initial model's wagons did indeed have a mass, it had a static value, and it was the same for all 40 wagons, making them identical and indistinguishable from one another. This is of course undesirable as it poorly reflects reality. To make up for this flaw, a pool of 500 wagons has been randomly generated via python script:
+While the initial model's wagons did indeed have a mass, it had a static value, and it was the same for all 40 wagons, making them identical and indistinguishable from one another. This is of course undesirable as it poorly reflects reality. To make up for this flaw, a pool of 500 wagons has been randomly generated via a python script:
 
 \bigskip
 \begin{python}

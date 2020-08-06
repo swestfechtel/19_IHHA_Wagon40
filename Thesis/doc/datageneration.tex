@@ -248,7 +248,33 @@ Tables \ref{tab:datastructure} and \ref{tab:datastructure2} show the data struct
 \par
 One is now presented with two choices: Either write a new table file for every simulation (i.e. have hundreds of thousands of small files), or write everything into one single large table file. As we will generate large quantities of data, creating only one table is the preferred choice since it is more suitable for big data processing. In fact, as of now, two of these tables have already been loaded into a hadoop distributed file system, making further analyses possible. Subsequently, a column containing the simulation identifier needs to be added to the table structure to make differentiation between simulations possible. This leads to the final table structure shown in tables \ref{tab:datastructure} and \ref{tab:datastructure2}. Remember that there are 592,000 simulations for each track profile, therefore there must be 592,000 unique ids, each referencing the results of one simulation. Each simulation, in turn, has approximately 300 rows, the exact count determined by simulink. The time-series objects have 41 columns for wagon output, and two columns for train output, respectively; all together, there are $3 \cdot 41 + 2 \cdot 2 + 6 = 133$ columns in one such file. It is worthy to note that even though there may be less than 40 wagons in one simulation, the wagon-specific time-series objects ($F_{b}$, $P_{bp}$ and $a$) will always have 41 columns, with the unused columns filled with zeros (Remember that in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, it was stated output for unwanted wagons is set to zero values).
 \par
-One parameter, however, is still missing from the table: The track profile. 
+One parameter, however, is still missing from the table: The track profile. It is a vector of the following structure:
+
+\bigskip
+\begin{table}[H]
+	\centering
+	\begin{tabular}{*{2}{c}}\toprule
+		\# & $v_{max}$ \\ \midrule
+		0 & 10 \\
+		1 & 10 \\
+		\vdots & \\
+		2200 & 15 \\
+		\vdots & \\
+		7199 & 0 \\ 
+	\end{tabular}
+	\caption{Track profile structure}
+	\label{tab:trackprofile}
+\end{table}
+
+\noindent
+The first column (\#) is the index for the data points, and the second column is the corresponding value for maximum velocity $v_{max}$ at this particular point in time. A few choices present themselves of how to add to the output table. It could be added to every simulation; this would lead to massive overhead, however, since $\sim$6900 rows would need to be filled for every single simulation. Furthermore, it is unnecessary to add the track profile to every simulation, since it does not change, compared to varying input parameters like the number of wagons. Therefore, one might either write the vector once, to the end of the table, or write it to a separate file. Appending it to the end of the table still leads to slight overhead in terms of disk space, since for each simulation, two additional columns would need to be filled with zeros; also, this would lead to the last 7199 rows of the output table having different semantics than the previous entries, which would need to be highlighted somehow. The easiest approach, which has been chosen accordingly, is therefore writing the track profile to a separate file, which can then be linked to the output table further down the line.
 
 \section{Analysis of generated Data}
 \label{sec:AnalysisOfGeneratedData}
+660421317
+\section{Performance}
+\label{sec:Performance}
+\par\noindent
+Finally, a few words about performance aspects. Simulink, while being intuitive and rather easy to learn, might be lacking in terms of raw performance. As mentioned earlier, single simulations can be computed in a matter of seconds; when it comes to larger quantities however, as in our case, these few seconds quickly start to add up. As a reference, the average time it took to complete all 592,000 simulations for one track profile was around four days, or 96 hours! It must be noted that Simulink does offer some ways to improve performance. For one, a model inspector can be used to check for faulty logic in the underlying model, which might hamper performance (e.g. unnecessary loops, ill-configured blocks etc). There are also acceleration and hyper-acceleration compilation options which increase performance. The acceleration mode has, in fact, been used for this work, and it has sped up the process considerably. The hyper-acceleration mode, however, does not allow for model output and is therefore utterly unsuited for this work since generating data becomes impossible. Fortunately, the matlab engine offers parallel processing, so the performance may yet be considerably improved if one possesses enough computing power. As mentioned earlier, the matlab engine is quite resource-hungry, however. 
+\par
+Since performance was no major factor in this work, no real tangible analyses have been made (e.g. runtime measurements, hardware utilization etc.). Surely, in further work, the performance might be optimized; the current state is satisfactory anyhow. There are a few alternatives to matlab and simulink on the market, like Modelica or Scilab's Xcos, but whether these pieces of software offer a better performance necessitates further research. This could be the focus of future works continuing this topic.

@@ -4,15 +4,15 @@
 \textit{\textbf{Introduction}} This section deals with the engineering backgrounds of the work, especially in regards to railway vehicle engineering and railway physics. 
 For the creation of a braking model, it is necessary to have at least a basic understanding of the engineering and physics behind rail traffic. The most fundamental component to understand is, of course, the actual braking process.
 
-\section{The train brake}
+\section{The Train Brake}
 \label{sec:TrainBrake}
 \par\noindent
-There is a number of different construction methods for brakes, but each must address two problems: The means of transmission of commands and the actual form of brake force generation. The focus here will lie on the pneumatic brake, since it is still the most prevalent in cargo vehicles. From a macro perspective, the pneumatic brake has three main components: The train driver's brake valve, the brake pipe and one or more brake cylinders for each wagon or locomotive. The driver's valve and the brake pipe are primarily the means of command transmission, while the brake cylinder's job is the generation of brake force. 
+There are a number of different construction methods for brakes, but each must address two problems: The means of transmission of commands and the actual form of brake force generation. The focus here will lie on the pneumatic brake, since it is still the most prevalent in cargo vehicles. From a macro perspective, the pneumatic brake has three main components: The train driver's brake valve, the brake pipe and one or more brake cylinders for each wagon or locomotive. The driver's valve and the brake pipe are primarily the means of command transmission, while the brake cylinder's job is the generation of brake force. 
 
 \par
 The braking system is an indirect one, which means the brake pipe needs to be vented to apply the brakes. Therefore, the brake pipe is kept at a running pressure of 5 bar. One advantage of this approach is that brakes are automatically applied in case of train separation. The downside, however, is that command transmission is limited to the speed of sound. In order to generate that pressure, the locomotive contains a compressor and an air reservoir. Initially, the brake pipe as well as all auxiliary air reservoirs are brought to operating pressure. If the train operator wishes to brake, he has to actuate the driver's brake valve, which in turn vents the brake pipe, usually as far as 3.5 bar (full braking), sometimes even lower. As rule of thumb, the more pressure is vented, the more braking force is applied. Each wagon brake has, in essence, an auxiliary air reservoir, a distributor valve and a braking cylinder. When the brake pipe is vented, the air in the auxiliary reservoir has a higher pressure. This difference in pressure triggers a switch of the distributor valve, and the air from the reservoir may go into the brake cylinder. This increase in the cylinder generates the actual braking force. To summarize, the amount of generated braking pressure is directly proportional to the amount of pressure vented.
 
-\section{Influences on braking performance}
+\section{Influences on Braking Performance}
 \label{sec:InfluencesOnBraking}
 \par\noindent
 Since the aim of this work is to monitor braking performance, it becomes necessary to understand which factors influence the braking process, and how. The braking process is, in its core, a system. A system may be defined as a set of objects, which are interconnected by relations. It is enclosed by its environment, which may or may not affect the system itself. Below is an illustration, also called box model:
@@ -81,7 +81,7 @@ Let ${\mathcal {M}}_{bp}$ be the model describing the system brake pipe, with ${
 Let ${\mathcal {M}}_{bc}$ be the model describing the system brake cylinder, with ${\mathcal {V}}_{bc} = \{ p_{bc} \}$, ${\mathcal {R}}_{bc} = \emptyset$ and $c_{bc} = \{ t_{bc} \}$, where $p_{bc}$ is the cylinder's pressure and $t_{bc}$ is the cylinder's fill time.
 \bigskip
 \par\noindent
-This wraps up the definition of ${\mathcal{V}}_{B}$. We may now get to the definition of ${\mathcal{R}}_{B}$, which is the relations (a) between the elements of ${\mathcal{V}}_{B}$ and (b) between ${\mathcal{M}}_{B}$ and its environment. Let us begin with (a):
+This wraps up the definition of ${\mathcal{V}}_{B}$. We may now get to the definition of ${\mathcal{R}}_{B}$, which consists of the relations (a) between the elements of ${\mathcal{V}}_{B}$ and (b) between ${\mathcal{M}}_{B}$ and its environment. Let us begin with (a):
 \bigskip
 \par\noindent
 \textit{\textbf{Convention}} For readability purposes, $\propto$ shall from here on denote direct proportionality, and $\sim$ shall denote inverse proportionality.
@@ -124,12 +124,12 @@ Finally, the braking distance $d$ is also dependent on two factors: The running 
 \label{eq:brakingdistance}
 \begin{aligned}
 &d=\frac{1}{2} \cdot a \cdot t^{2} \\
-&v=a \cdot t \quad \rightarrow \quad s=\frac{v^{2}}{2 \cdot a}
+&v=a \cdot t \quad \rightarrow \quad d=\frac{v^{2}}{2 \cdot a}
 \end{aligned}
 \end{equation}
 
 \noindent
-where $t$ is the stopping time [train braking, 23]. So in practice, the running speed $v$ is directly proportional to the braking distance, and the braking deceleration is inversely proportional to $d$. We can therefore denote $v \propto d$, and $a \sim d$, and subsequently define two relations $R_{v,d}: v \propto d$, and $R_{a,d}: a \sim d$.
+where $t$ is the stopping time [train braking, 23]. So in practice, the square of the running speed $v$ is directly proportional to the braking distance, and the braking deceleration is inversely proportional to $d$. We can therefore denote $v \propto d$, and $a \sim d$, and subsequently define two relations $R_{v,d}: v \propto d$, and $R_{a,d}: a \sim d$.
 \par
 This completes the set of internal relations of ${\mathcal{R}}$.
 
