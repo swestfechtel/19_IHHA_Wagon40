@@ -30,16 +30,16 @@ The box represents the actual system, ${\mathcal{V}}_{i}$ are the system variabl
 From a modeling perspective, it is sensible to differentiate as follows: Everything related to the train itself is part of the system, and everything else is part of the system's environment. As per definition, it is compromised of a set of variables, a set of relations, and a set of constants. Let us make a formal definition of the model for the braking process system:
 
 \begin{align*}
-{\mathcal {M}} = \{ \{{\mathcal {V}}\}, \{{\mathcal{R}}\}, \{c\} \}
+{\mathcal {M}} = \{ {\mathcal{V}}, {\mathcal{R}}, {\mathcal{C}} \}
 \end{align*}
 
 \noindent
-where $\{{\mathcal {V}}\}$ is the set of system variables, $\{{\mathcal {R}}\}$ is the set of relations (a) between elements of $\{{\mathcal {V}}\}$ and (b) between system and environment, and $\{c\}$ is the set of system constants. The system variables may be subsystems themselves. We shall take a closer look at $\{{\mathcal {V}}\}$ first.
+where ${\mathcal{V}}$ is the set of system variables, ${\mathcal{R}}$ is the set of relations (a) between elements of ${\mathcal{V}}$ and (b) between system and environment, and ${\mathcal{C}}$ is the set of system constants. The system variables may be subsystems themselves. We shall take a closer look at ${\mathcal{V}}$ first.
 
 \subsection{Inherent factors, model variables}
 \label{sec:InherentFactors}
 \par\noindent
-Looking at ${\mathcal{M}}$, which is the system describing the braking process, $\{{\mathcal {V}}\}$ consists of all factors inherent to the train which have an impact on the braking, as well as the relevant quantifiers. The main ones are:
+Looking at ${\mathcal{M}}$, which is the system describing the braking process, ${\mathcal{V}}$ consists of all factors inherent to the train which have an impact on the braking, as well as the relevant quantifiers. The main ones are:
 \begin{itemize}
 	\item The train brake
 	\item The wagon mass, denoted as $m$
@@ -53,28 +53,28 @@ Looking at ${\mathcal{M}}$, which is the system describing the braking process, 
 It is noteworthy that the train brake is another system in itself, which is perfectly fine of course. Alas, it is therefore necessary to define another model.
 
 \begin{align*}
-{\mathcal {M}}_{B} = \{ \{{\mathcal {V}}_{B}\}, \{{\mathcal{R}}_{B}\}, \{c_{B}\} \}
+{\mathcal {M}}_{B} = \{ {\mathcal {V}}_{B}, {\mathcal {R}}_{B}, {\mathcal {C}}_{B} \}
 \end{align*}
 
 \noindent
-Let ${\mathcal{M}}_{B}$ be the model describing the system train brake, with $\{{\mathcal {V}}_{B}\} = \{ {\mathcal {M}}_{bv}, {\mathcal {M}}_{bp}, {\mathcal {M}}_{bc} \}$, where ${\mathcal {M}}_{bv}$ is the model of the brake valve, ${\mathcal {M}}_{bp}$ the model of the brake pipe and ${\mathcal {M}}_{bc}$ the model of the brake cylinder, which in turn shall be defined as follows:
+Let ${\mathcal{M}}_{B}$ be the model describing the system train brake, with ${\mathcal {V}}_{B} = \{ {\mathcal {M}}_{bv}, {\mathcal {M}}_{bp}, {\mathcal {M}}_{bc} \}$, where ${\mathcal {M}}_{bv}$ is the model of the brake valve, ${\mathcal {M}}_{bp}$ the model of the brake pipe and ${\mathcal {M}}_{bc}$ the model of the brake cylinder, which in turn shall be defined as follows:
 
 \begin{align*}
-{\mathcal {M}}_{bv} = \{ \{{\mathcal {V}}_{bv}\}, \{{\mathcal{R}}_{bv}\}, \{c_{bv}\} \}
+{\mathcal {M}}_{bv} = \{ {\mathcal {V}}_{bv}, {\mathcal {R}}_{bv}, {\mathcal {C}}_{bv} \}
 \end{align*}
 
 \noindent
 Let ${\mathcal {M}}_{bv}$ be the model describing the system brake valve, with ${\mathcal {V}}_{bv} = \{x\}$, ${\mathcal {R}}_{bv} = \emptyset$ and $c_{bv} = \emptyset$, where $x$ is the state of the brake valve, i.e. its opening percentage, ranging from 0 (fully closed) to 1 (fully open, full braking).
 
 \begin{align*}
-{\mathcal {M}}_{bp} = \{ \{{\mathcal {V}}_{bp}\}, \{{\mathcal{R}}_{bp}\}, \{c_{bp}\} \}
+{\mathcal {M}}_{bp} = \{ {\mathcal {V}}_{bp}, {\mathcal {R}}_{bp}, {\mathcal {C}}_{bp} \}
 \end{align*}
 
 \noindent
 Let ${\mathcal {M}}_{bp}$ be the model describing the system brake pipe, with ${\mathcal {V}}_{bp} = \{ l_{bp}, p_{bp} \}$, ${\mathcal {R}}_{bp} = \emptyset$ and $c_{bp} = \{ v_{bp} \}$, where $l_{bp}$ is the physical length of the brake pipe, $p_{bp}$ is the pressure on the brake pipe and $v_{bp}$ is the propagation velocity of the pipe's medium. 
 
 \begin{align*}
-{\mathcal {M}}_{bc} = \{ \{{\mathcal {V}}_{bc}\}, \{{\mathcal{R}}_{bc}\}, \{c_{bc}\} \}
+{\mathcal {M}}_{bc} = \{ {\mathcal {V}}_{bc}, {\mathcal {R}}_{bc}, {\mathcal {C}}_{bc} \}
 \end{align*}
 
 \noindent
@@ -101,7 +101,7 @@ For simplicity, we can look at ${\mathcal{M}}_{B}$ as being isolated from its en
 This finally leaves us with $c_{B}$. Since call constants are specific to the respective sub-models $\in {\mathcal{V}}_{B}$, ${\mathcal{M}}_{B}$ has no constants of its own, therefore $c_{B} = \emptyset$. This completes the definition of ${\mathcal{M}}_{B}$, and we can properly define the set of model variables of the model braking process:
 
 \begin{align*}
-\{ {\mathcal{V}} \} = \{ {\mathcal{M}}_{B},m,v,comp,F_{b},a,d \}
+{\mathcal{V}} = \{ {\mathcal{M}}_{B},m,v,comp,F_{b},a,d \}
 \end{align*}
 
 \subsection{Relations}
@@ -114,7 +114,7 @@ Looking at our model ${\mathcal{M}}$, we have now defined its set of variables, 
 \par\noindent
 Obviously, the train brake ${\mathcal{M}}_{B}$ relates to $F_{B}$ as it is the actor responsible for generating the braking force. More specifically, $p_{bc} \in {\mathcal{V}}_{bc}$, which is the pressure in the brake cylinder, is directly proportionate to $F_{b}$, meaning the higher the pressure, the more force is applied. We can therefore denote $p_{bc} \propto F_{b}$, and subsequently define a relation $R_{{\mathcal{M}}_{B},F_{b}}: {\mathcal{M}}_{B} \propto F_{b}$.
 \par
-Furthermore, the wagon mass $m$ relates to $F_{B}$ as well. The vehicle mass is proportional to the kinetic energy to dissipate during braking actions. The larger $m$ is, the more kinetic energy ($E=\frac{1}{2} \cdot m \cdot v^{2}$), and thus the higher the required braking force to slow the train down. As the vehicle mass varies, so must the applied braking force in order to avoid wheel slip and locking of the wheels which occurs if too much force is applied [train braking, 19]. We can therefore denote $m \propto F_{b}$, and subsequently define a relation $R_{m,F_{b}}: m \propto F_{b}$.
+Furthermore, the wagon mass $m$ relates to $F_{B}$ as well. The vehicle mass is proportional to the kinetic energy to dissipate during braking actions. The larger $m$ is, the more kinetic energy ($E=\frac{1}{2} \cdot m \cdot v^{2}$), and thus the higher the required braking force to slow the train down. As the vehicle mass varies, so must the applied braking force in order to avoid wheel slip and locking of the wheels which occurs if too much force is applied (\cite{Cruceanu2012}, p.47). We can therefore denote $m \propto F_{b}$, and subsequently define a relation $R_{m,F_{b}}: m \propto F_{b}$.
 \par
 The braking deceleration $a$, neglecting other resistances, is influenced by two factors: The applied braking force $F_{b}$, and the vehicle's mass $m$. As per Newton's second law of motion, $F=m \cdot a$, so $a=\frac{F_{b}}{m}$ [train braking, 23]. In practice, this means the braking force is directly proportional to the braking deceleration, and the vehicle mass is inversely proportional to $a$, not taking into consideration wheel slip. We can therefore denote $F_{b} \propto a$, and $m \sim a$, and subsequently define two relations $R_{F_{b},a}: F_{b} \propto a$, and $R_{m,a}: m \sim a$.
 \par
@@ -129,7 +129,7 @@ Finally, the braking distance $d$ is also dependent on two factors: The running 
 \end{equation}
 
 \noindent
-where $t$ is the stopping time [train braking, 23]. So in practice, the square of the running speed $v$ is directly proportional to the braking distance, and the braking deceleration is inversely proportional to $d$. We can therefore denote $v \propto d$, and $a \sim d$, and subsequently define two relations $R_{v,d}: v \propto d$, and $R_{a,d}: a \sim d$.
+where $t$ is the stopping time (\cite{Cruceanu2012}, p.51). So in practice, the square of the running speed $v$ is directly proportional to the braking distance, and the braking deceleration is inversely proportional to $d$. We can therefore denote $v \propto d$, and $a \sim d$, and subsequently define two relations $R_{v,d}: v \propto d$, and $R_{a,d}: a \sim d$.
 \par
 This completes the set of internal relations of ${\mathcal{R}}$.
 
@@ -164,44 +164,44 @@ a_{grad}(\alpha) =
 \noindent
 where $\alpha$ is the value of the gradient, e.g. a percentage or an angle. This shows the track gradient is directly proportional to the total braking deceleration. We can therefore denote $\alpha \propto a$, and subsequently define a relation $R_{\alpha,a}: \alpha \propto a$.
 \par
-The second factor to look at is the wheel/rail adhesion. Environmental effects like rain, ice or contaminants such as leaves have a degrading effect on the wheel/rail friction. This is expressed by a friction coefficient $\mu$, where a lower value, for example $\mu = 0.2$ for a wet rail surface, means worse braking performance compared to a higher value, e.g. $\mu = 0.4$ for normal conditions. The friction coefficient is a limiting factor for the applied braking force, in the sense that when too much force force is applied, wheel slip occurs, and braking performance decreases [design and simulation, 12]. While $\mu$ does not have a direct influence on $F_{b}$, it is, in practice, still related to it in that it is a limiting factor; an indirect influence, so to speak. In that regard, we might say it is directly proportional to the braking force: The higher the friction coefficient, the higher the maximum braking force that may be applied. We can therefore denote $\mu \propto F_{b}$, and subsequently define a relation $R_{\mu,F_{b}}: \mu \propto F_{b}$.
+The second factor to look at is the wheel/rail adhesion. Environmental effects like rain, ice or contaminants such as leaves have a degrading effect on the wheel/rail friction. This is expressed by a friction coefficient $\mu$, where a lower value, for example $\mu = 0.2$ for a wet rail surface, means worse braking performance compared to a higher value, e.g. $\mu = 0.4$ for normal conditions. The friction coefficient is a limiting factor for the applied braking force, in the sense that when too much force force is applied, wheel slip occurs, and braking performance decreases (\cite{Bosso2006}, p.876). While $\mu$ does not have a direct influence on $F_{b}$, it is, in practice, still related to it in that it is a limiting factor; an indirect influence, so to speak. In that regard, we might say it is directly proportional to the braking force: The higher the friction coefficient, the higher the maximum braking force that may be applied. We can therefore denote $\mu \propto F_{b}$, and subsequently define a relation $R_{\mu,F_{b}}: \mu \propto F_{b}$.
 \bigskip
 \par\noindent
 We may now properly define the set of relations of the model braking process:
 
 \begin{align*}
-\{ {\mathcal{R}} \} = \{ R_{{\mathcal{M}}_{B},F_{b}} \:,\: R_{m,F_{b}} \:,\: R_{F_{b},a} \:,\: R_{m,a} \:,\: R_{v,d} \:,\: R_{a,d} \:,\: R_{\alpha,a} \:,\: R_{\mu,F_{b}} \}
+{\mathcal{R}} = \{ R_{{\mathcal{M}}_{B},F_{b}} \:,\: R_{m,F_{b}} \:,\: R_{F_{b},a} \:,\: R_{m,a} \:,\: R_{v,d} \:,\: R_{a,d} \:,\: R_{\alpha,a} \:,\: R_{\mu,F_{b}} \}
 \end{align*}
 
 \section{Constants}
 \label{sec:Constants}
 \par\noindent
-The braking process, being a dynamic one, has no constants in itself. Some of its components do, in particular the models making up the train brake, like the brake pipe ${\mathcal{M}}_{bp}$'s propagation velocity $v_{bp}$. However, these have already been discussed; we can therefore conclude that $\{ c \} = \emptyset$.
+The braking process, being a dynamic one, has no constants in itself. Some of its components do, in particular the models making up the train brake, like the brake pipe ${\mathcal{M}}_{bp}$'s propagation velocity $v_{bp}$. However, these have already been discussed; we can therefore conclude that ${\mathcal{C}} = \emptyset$.
 \bigskip
 \par\noindent
-To summarize, we have now defined all necessary components of ${\mathcal{M}}$, namely its set of model variables $\{{\mathcal{V}}\}$, its set of relations $\{{\mathcal{R}}\}$, and its set of constants $\{c\}$. This model will be used in chapter \ref{chap:ModelingOfTrainOperations} as a theoretical basis upon which to build a simulink model, simulating the braking process.
+To summarize, we have now defined all necessary components of ${\mathcal{M}}$, namely its set of model variables ${\mathcal{V}}$, its set of relations ${\mathcal{R}}$, and its set of constants ${\mathcal{C}}$. This model will be used in chapter \ref{chap:ModelingOfTrainOperations} as a theoretical basis upon which to build a simulink model, simulating the braking process.
 
 \section{Time considerations}
 \label{sec:TimeConsiderations}
 \par\noindent
 So far, we have looked at the braking process from a static point of view. However, in reality it is a dynamic process and thus, time has to be taken into consideration. More specifically, it is a continuous model: For ${\mathcal{M}}$, the state of its variables changes all the time for the whole duration of the process. 
 \par
-Remember how we have defined the model. It is a set comprising of a number of subsets; but it describes a system, in this case the braking process of a train. This means that the model variables, i.e. the elements of $\{{\mathcal{V}}\}$, are subject to change as the process progresses. This can be expressed by another equation, in form of a function $f$:
+Remember how we have defined the model. It is a set comprising of a number of subsets; but it describes a system, in this case the braking process of a train. This means that the model variables, i.e. the elements of ${\mathcal{V}}$, are subject to change as the process progresses. This can be expressed by another equation, in form of a function $f$:
 
 \begin{align*}
 \{ V \} &= f( {\mathcal{M}} ) \\
-		&= f( \{ {\mathcal{V}} \}, \{ {\mathcal{R}} \}, \{ c \} )
+		&= f( {\mathcal{V}}, {\mathcal{R}}, {\mathcal{C}} )
 \end{align*}
 
 \noindent
-This suffices to determine the system's state before and after a relation has changed. As an example, $v$ might be $25 \; \frac{m}{s}$ when the train operator engages the brakes, and $10 \; \frac{m}{s}$ when the brakes have been released. However, since we wish to monitor the whole braking process, it is also interesting to see how the state changes over time. In this example, $v$ would be $25 \; \frac{m}{s}$ for $t=0$, $22.3 \; \frac{m}{s}$ for $t=50$ etc. We therefore need a new equation where $\{ {\mathcal{V}} \}$ is also dependent on $t$.
+This suffices to determine the system's state before and after a relation has changed. As an example, $v$ might be $25 \; \frac{m}{s}$ when the train operator engages the brakes, and $10 \; \frac{m}{s}$ when the brakes have been released. However, since we wish to monitor the whole braking process, it is also interesting to see how the state changes over time. In this example, $v$ would be $25 \; \frac{m}{s}$ for $t=0$, $22.3 \; \frac{m}{s}$ for $t=50$ etc. We therefore need a new equation where ${\mathcal{V}}$ is also dependent on $t$.
 
 \begin{align*}
 {\mathcal{V}}(t)' = f ( {\mathcal{M}} )
 \end{align*}
 
 \noindent
-This allows for the calculation of the rate of change for any given point in time. By integrating the equation, one can also obtain the actual values of the elements of $\{ {\mathcal{V}} \}$, e.g. the value of $v$ for $t=120$. The function $f$ is one, or a set of, differential equations; how these look like goes beyond the scope of this work, however.
+This allows for the calculation of the rate of change for any given point in time. By integrating the equation, one can also obtain the actual values of the elements of ${\mathcal{V}}$, e.g. the value of $v$ for $t=120$. The function $f$ is one, or a set of, differential equations. In practice, these are automatically generated and calculated by Simulink.
 \bigskip
 \par\noindent
 We have now laid all the necessary groundwork to build a functioning model of the braking process, which can then be used for simulation and data generation. The next chapter will deal with this.

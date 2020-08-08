@@ -152,7 +152,7 @@ F(n,t) = F_{t}(n,t) + F_{b}(n,t)
 \noindent
 Since either of the summands is always zero, equation \ref{eq:force} outputs either the traction force or the braking force being applied at a point in time $t$, for a value of $v_{dif} = n$. This part of the system is marked by the blue rectangle, and together with the brake valve completes the system responsible for controlling the train.
 \par\noindent
-Let's reach back to our model ${\mathcal{M}}$ from chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, in particular to three elements of its set of model variables $\{{\mathcal{V}}\}$: The train's acceleration $a$, its velocity $v$, and its braking distance $d$. Since we can now determine the applied force $F(n,t)$, it is now also possible to calculate the values of these three variables.
+Let's reach back to our model ${\mathcal{M}}$ from chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, in particular to three elements of its set of model variables ${\mathcal{V}}$: The train's acceleration $a$, its velocity $v$, and its braking distance $d$. Since we can now determine the applied force $F(n,t)$, it is now also possible to calculate the values of these three variables.
 
 \begin{equation}
 \label{eq:newton}
@@ -184,7 +184,7 @@ d = \int v \; dv
 \end{equation}
 
 \noindent
-This part of the system is marked by the green rectangle. This also completes the description of this subsystem. Looking back at our model ${\mathcal{M}}$, the last elements of $\{{\mathcal{V}}\}$ left to deal with are the brake pipe ${\mathcal{M}}_{bp}$, the brake cylinder ${\mathcal{M}}_{bc}$, the wagon mass $m$, the train composition $comp$, and finally the braking force $F_{b}$.
+This part of the system is marked by the green rectangle. This also completes the description of this subsystem. Looking back at our model ${\mathcal{M}}$, the last elements of ${\mathcal{V}}$ left to deal with are the brake pipe ${\mathcal{M}}_{bp}$, the brake cylinder ${\mathcal{M}}_{bc}$, the wagon mass $m$, the train composition $comp$, and finally the braking force $F_{b}$.
 
 \begin{figure}[H]
 	\centering
@@ -276,10 +276,10 @@ F_{b,e} = F_{b,max} \cdot \mu
 \end{equation}
 
 \noindent
-Equation \ref{eq:frictioncoefficient} is used to calculate the braking force before sliding would occur, $F_{b,e}$ by multiplying the maximum possible braking force $F_{b,max}$ with the wheel/rail friction coefficient $\mu$. The result is then used to limit the applied braking force $F_{b}$ so that sliding is avoided, utilizing a saturation dynamic block. This still satisfies $R_{\mu,F_{b}} \in \{ {\mathcal{R}} \}$. This component is marked by the brown rectangle.
+Equation \ref{eq:frictioncoefficient} is used to calculate the braking force before sliding would occur, $F_{b,e}$ by multiplying the maximum possible braking force $F_{b,max}$ with the wheel/rail friction coefficient $\mu$. The result is then used to limit the applied braking force $F_{b}$ so that sliding is avoided, utilizing a saturation dynamic block. This still satisfies $R_{\mu,F_{b}} \in {\mathcal{R}}$. This component is marked by the brown rectangle.
 \bigskip
 \par\noindent
-This completes the description of the simulink model. Reaching back to chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, all elements of $\{ {\mathcal{V}} \}$, $\{ {\mathcal{R}} \}$ and $\{ c \}$ have been accounted for, and we can therefore conclude our theoretical model ${\mathcal{M}}$ has been implemented. It may now be used for simulation and data generation.
+This completes the description of the simulink model. Reaching back to chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, all elements of ${\mathcal{V}}$, ${\mathcal{R}}$ and ${\mathcal {C}}$ have been accounted for, and we can therefore conclude our theoretical model ${\mathcal{M}}$ has been implemented. It may now be used for simulation and data generation.
 
 \section{Outlook}
 \label{sec:Outlook}

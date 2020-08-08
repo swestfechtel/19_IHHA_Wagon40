@@ -99,7 +99,7 @@ tracforce = 200000:1000:400000;
 \bigskip
 
 \noindent
-The remaining elements of $\{{\mathcal{V}}\}$ left to address are wagon mass $m$, train composition $comp$, and wheel/rail friction coefficient $\mu$; furthermore, the maximum traction force the locomotive can generate. The wagon mass is handled by the wagon pool (section \ref{sec:ModelExpansion} and thus is not part of the matlab script. All possible combinations of the remaining three variables are created using nested loops. Their values range from one to forty for the number of wagons ($comp$), step size one, 0.05 to 0.78 for wheel/rail friction coefficient ($\mu$), step size 0.01, and 200,000 to 400,000 for traction force, step size 1,000. Therefore, the total number of possible combinations is $40 \cdot 74 \cdot 200 = 592000$, i.e. for every distinct track profile, there is 592,000 simulation runs.   
+The remaining elements of ${\mathcal{V}}$ left to address are wagon mass $m$, train composition $comp$, and wheel/rail friction coefficient $\mu$; furthermore, the maximum traction force the locomotive can generate. The wagon mass is handled by the wagon pool (section \ref{sec:ModelExpansion} and thus is not part of the matlab script. All possible combinations of the remaining three variables are created using nested loops. Their values range from one to forty for the number of wagons ($comp$), step size one, 0.05 to 0.78 for wheel/rail friction coefficient ($\mu$), step size 0.01, and 200,000 to 400,000 for traction force, step size 1,000. Therefore, the total number of possible combinations is $40 \cdot 74 \cdot 200 = 592000$, i.e. for every distinct track profile, there is 592,000 simulation runs.   
 
 \bigskip
 \begin{python}
