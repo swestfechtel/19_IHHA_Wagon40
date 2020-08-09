@@ -208,9 +208,6 @@
 %\include{./doc/performance}
 \include{./doc/conclusion}
 
-\cite{Pfaff2017,Wende2003,Bosso2006,Pfaff2017a,Havryliuk2017,Cruceanu2012,Enning2017}
-
-
 % Nachspann
 % \nocite{Segmentation} % Quelle wird nicht im Text erwähnt -> Quellenverzeichnis
 % \nocite{ImageAttack}
@@ -219,12 +216,10 @@
 
 % Quellenverzeichnis
 \clearpage
-% Quellenverzeichnis
-\clearpage
 \bibliographystyle{alpha}
 %\bibliographystyle{apalike}
 \bibliography{./bib/quellen}
-\addcontentsline{toc}{chapter}{Quellenverzeichnis}
+\addcontentsline{toc}{chapter}{Bibliography}
 \addtocontents{toc}{\vspace{0.8cm}}
 
 % Abkürzungsverzeichnis
@@ -234,26 +229,26 @@
 %\addtocontents{toc}{\vspace{0.8cm}}
 
 % Abbildungsverzeichnis
-\clearpage
-\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+%\clearpage
+\addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
 \addtocontents{toc}{\vspace{0.8cm}}
 
 % Tabellenverzeichnis
-\clearpage
-\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+%\clearpage
+\addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
 \addtocontents{toc}{\vspace{0.8cm}}
 
 % Anhaenge
-\addcontentsline{toc}{chapter}{Anhang}
+%\addcontentsline{toc}{chapter}{Anhang}
 \appendix
 %\input{./app/Dateiname}
-\chapter{Quellcode}
-\begin{enumerate}
-      \item Source 1
-      \item Source 2
-\end{enumerate}
+%\chapter{Quellcode}
+%\begin{enumerate}
+%      \item Source 1
+%      \item Source 2
+%\end{enumerate}
 
 % Anhänge im Ordner 'app' ablegen
 
@@ -263,21 +258,19 @@
 \chapter{Data visualization}
 
 %\includepdf{./app/initmodel_pressureinput.pdf}
-\TODO{Visualisierungen einfügen}
+%\TODO{Visualisierungen einfügen}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/initmodel_subsys}
-	\caption{Initial Model}
+	\caption{Initial Model - Subsystem}
 	\label{fig:initmodel_subsys}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/initmodel_input}
-	\caption{Initial Model}
+	\caption{Initial Model - Simulation Input}
 	\label{fig:initmodel_input}
 \end{figure}
-
-
 
 \end{document}
