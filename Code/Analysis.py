@@ -4,20 +4,20 @@ import pandas
 columns = ['id', 'time']
 
 for i in range(40):
-	columns.append(f"F{i}")
+	columns.append("F" + str(i))
 
 for i in range(40):
-	columns.append(f"P{i}")
+	columns.append("P" + str(i))
 
 columns.append('velocity')
 
 for i in range(40):
-	columns.append(f"a{i}")
+	columns.append("a" + str(i))
 
 columns.append(distance)
 
 for i in range(40):
-	columns.append(f"Wagon{i}")
+	columns.append("Wagon" + str(i))
 
 columns.append('gradient')
 columns.append('Ft')
