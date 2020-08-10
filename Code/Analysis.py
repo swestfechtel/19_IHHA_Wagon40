@@ -1,4 +1,5 @@
-import pandas
+import numpy as np
+import pandas as pd
 
 # id,time(i),f,p,v,a,d,wagon_ids,grad,ft,fc
 columns = ['id', 'time']
@@ -23,5 +24,5 @@ columns.append('gradient')
 columns.append('Ft')
 columns.append('fc')
 
-df = pandas.read_csv('output/output.tsv', names=columns, memory_map=True)
+df = pd.read_csv('output/output.tsv', names=columns, memory_map=True)
 df.info(verbose=True)
