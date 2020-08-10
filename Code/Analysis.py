@@ -15,7 +15,7 @@ columns.append('velocity')
 for i in range(40):
 	columns.append("a" + str(i))
 
-columns.append(distance)
+columns.append('distance')
 
 for i in range(40):
 	columns.append("Wagon" + str(i))
