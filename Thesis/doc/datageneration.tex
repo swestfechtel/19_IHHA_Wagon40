@@ -8,7 +8,7 @@
 \par\noindent
 To recapitulate: We have defined a theoretical model for a train's braking process in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, and implemented this model in Simulink in chapter \ref{chap:ModelingOfTrainOperations}. The aim of this work, however, is not only building a model, but also generating a data set describing the train's behavior during its phases of breaking. We can utilize Simulink to run a large number of simulations with varying combinations of input parameters. Each simulation represents one train ride, each ride consisting of multiple phases of accelerating, braking and keeping velocity. 
 
-\begin{figure}[H]
+\begin{figure}[htb!]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/input}
 	\caption{Simulation Input}
@@ -45,30 +45,30 @@ c = 250;
 \bigskip
 
 \noindent
-These constants all correspond to the brake pipe ${\mathcal{M}}_{bp}$, where $RBD$ is the regular operations pressure (i.e. the pressure on the brake pipe when brakes are disengaged), $VBD$ is the full breaking pressure (i.e. the pressure on the brake pipe when brakes are fully engaged), $l$ is the physical length of the brake pipe $l_{bp}$ (although $l_{bp}$ is defined as a variable in ${\mathcal{M}}_{bp}$, it is assumed all wagons have the same physical length for the sake of simplicity), and $c$ is the propagation velocity of the pipe's medium $v_{bp}$.
+These constants all correspond to the brake pipe ${\mathcal{M}}_{bp}$, where \pyth{RBD} is the regular operations pressure (i.e. the pressure on the brake pipe when brakes are disengaged), \pyth{VBD} is the full breaking pressure (i.e. the pressure on the brake pipe when brakes are fully engaged), \pyth{l} is the physical length of the brake pipe $l_{bp}$ (although $l_{bp}$ is defined as a variable in ${\mathcal{M}}_{bp}$, it is assumed all wagons have the same physical length for the sake of simplicity), and \pyth{c} is the propagation velocity of the pipe's medium $v_{bp}$.
 
-\bigskip
-\begin{python}
-tf = 4;
-tl = .1;
-\end{python}
-\bigskip
-
-\noindent
-\TODO{}
-
-\bigskip
-\begin{python}
-p0 = 0;
-Pres = 0/1000*[5.7/771 0 1.6];
-alpha = 0.9;
-BPnum = [0.3 alpha];
-BPden = [1 alpha];
-\end{python}
-\bigskip
-
-\noindent
-\TODO{}
+%\bigskip
+%\begin{python}
+%tf = 4;
+%tl = .1;
+%\end{python}
+%\bigskip
+%
+%\noindent
+%\TODO{}
+%
+%\bigskip
+%\begin{python}
+%p0 = 0;
+%Pres = 0/1000*[5.7/771 0 1.6];
+%alpha = 0.9;
+%BPnum = [0.3 alpha];
+%BPden = [1 alpha];
+%\end{python}
+%\bigskip
+%
+%\noindent
+%\TODO{}
 \par\noindent
 All static parameters have now been initialized. They, along with the track profile, will remain unchanged for all simulations; what sets any two simulations apart is their variable input parameters.
 
@@ -156,7 +156,7 @@ end
 \bigskip
 
 \noindent
-Writing of the output is also done in smaller batches. The best approach to minimize the number of file accessions is of course writing everything into one big matrix (592,000 times ~300 output lines per simulation would result in a 177,600,000 line matrix!), thus storing in memory, and then writing the matrix in one go. Unfortunately, growing an array by assignment or concatenation can be expensive. For large arrays, Matlab must allocate a new block of memory and copy the older array contents to the new array as it makes each assignment. The other extreme would be writing line by line, but the resulting large number of file accessions required makes this just as unfeasible (again, that would be approximately 177,600,000 file accessions!). Therefore, finding a middle ground is necessary, and a batch size of 2960, i.e. the size of one simulation batch, works relatively well, although this could surely be optimized with a bit of runtime analysis. To optimize resource usage, writing is also done in parallel. This is possible because each simulation is identifiable by a unique ID, and thus synchronicity is not required, i.e. the simulations need not be written in order. An empty matrix is created using \pyth{matrix = [];}. The \pyth{Write()} function compresses all different output parameters from one simulation into one temporary matrix \pyth{tmp} and appends this temporary matrix to the output \pyth{matrix}. After all 2960 simulation outputs have been stored into \pyth{matrix}, it gets written to an output tabulator-separated file, the track counter is reset to one, and the parallel pool gets deleted so that the next batch of simulations may be run.
+Writing of the output is also done in smaller batches. The best approach to minimize the number of file accessions is of course writing everything into one big matrix (592,000 times ~1100 output lines per simulation would result in a 651,200,000 line matrix!), thus storing in memory, and then writing the matrix in one go. Unfortunately, growing an array by assignment or concatenation can be expensive. For large arrays, Matlab must allocate a new block of memory and copy the older array contents to the new array as it makes each assignment. The other extreme would be writing line by line, but the resulting large number of file accessions required makes this just as unfeasible (again, that would be approximately 651,200,000 file accessions!). Therefore, finding a middle ground is necessary, and a batch size of 2960, i.e. the size of one simulation batch, works relatively well, although this could surely be optimized with a bit of runtime analysis. To optimize resource usage, writing is also done in parallel. This is possible because each simulation is identifiable by a unique ID, and thus synchronicity is not required, i.e. the simulations need not be written in order. An empty matrix is created using \pyth{matrix = [];}. The \pyth{Write()} function compresses all different output parameters from one simulation into one temporary matrix \pyth{tmp} and appends this temporary matrix to the output \pyth{matrix}. After all 2960 simulation outputs have been stored into \pyth{matrix}, it gets written to an output tabulator-separated file, the track counter is reset to one, and the parallel pool gets deleted so that the next batch of simulations may be run.
 
 \bigskip
 \begin{python}
@@ -183,10 +183,10 @@ end
 \bigskip
 
 \noindent
-The \pyth{Write()} function takes all output parameters of a single simulation for its arguments. These are the unique ID of the simulation, a time-series object storing the train's velocity over the course of the simulation, a time-series object storing the wagons' applied braking force over the course of the simulation, a time-series object storing the wagons' braking pressure over the course of the simulation, a time-series object storing the train's traveled distance over the course of the simulation, a time-series object storing the wagons' acceleration over the course of the simulation, a vector storing the IDs of the wagons making up the train, a vector storing the track profile, the track gradient, the train's traction force, and the wheel/rail friction coefficient. The time-series objects all have the following general structure:
+The \pyth{Write()} function takes all output parameters of a single simulation for its arguments. These are the unique ID of the simulation, a time-series object storing the train's velocity over the course of the simulation, a time-series object storing the wagons' applied braking force over the course of the simulation, a time-series object storing the wagons' braking pressure over the course of the simulation, a time-series object storing the train's traveled distance over the course of the simulation, a time-series object storing the wagons' acceleration over the course of the simulation, a vector storing the IDs of the wagons making up the train, a vector storing the track profile, the track gradient, the train's traction force, and the wheel/rail friction coefficient. The time-series objects all have the general structure illustrated in table \ref{tab:timeseries}:
 
 \bigskip
-\begin{table}[H]
+\begin{table}[htb!]
 	\centering
 	\begin{tabular}{c|c|c|c}
 		Timestamp & Column 1 & Column 2 & Column n \\
@@ -210,7 +210,7 @@ For one simulation, all time-series objects have the line count, as well as the 
 \label{sec:DataStructure}
 
 \bigskip
-\begin{table}[H]
+\begin{table}[htb!]
 	\centering
 	\begin{tabular}{*{6}{c}}\toprule
 		simID & Timestamp & $F_{b,0}$ & $F_{b,1}$ & $F_{b,n}$ & $F_{b,39}$ \\ \midrule
@@ -227,7 +227,7 @@ For one simulation, all time-series objects have the line count, as well as the 
 \bigskip
 
 \bigskip
-\begin{table}[H]
+\begin{table}[htb!]
 	\centering
 	\begin{tabular}{*{8}{c}}\toprule
 		$P_{bp,n}$ & $v$ & $a_{n}$ & $d$ & WagonIDs & $\alpha$ & $F_{t}$ & $\mu$ \\ \midrule
@@ -246,12 +246,12 @@ For one simulation, all time-series objects have the line count, as well as the 
 \par\noindent
 Tables \ref{tab:datastructure} and \ref{tab:datastructure2} show the data structure generated by the \pyth{Write()} function. For each simulation, Simulink creates one time-series object for every monitored parameter. In particular, these are the braking force $F_{b}$, the braking pressure $P_{bp}$, the velocity $v$, the acceleration $a$, and the traveled distance $d$. These time-series objects all have the same general structure shown in table \ref{tab:timeseries}, where the number of columns corresponds to the amount of monitoring points; $F_{b}$, $P_{bp}$ and $a$, which are monitored for each wagon, have 41 columns (40 wagons plus timestamp), and $v$ and $d$, which are monitored for the entire train, have two (one train plus timestamp). As mentioned earlier, for one simulation, all time-series objects have the same number of rows. It is therefore possible to put all time-series objects into one wide table. We can then also add the input parameters to this table. In particular, these are the ids of the wagons used in the simulation ($comp$), the track gradient $\alpha$, the traction force $F_{t}$, and the wheel/rail friction coefficient $\mu$. In theory, these values only need to be written once, but the subsequent rows should be filled regardless to avoid empty cells, see table \ref{tab:datastructure2} for reference. 
 \par
-One is now presented with two choices: Either write a new table file for every simulation (i.e. have hundreds of thousands of small files), or write everything into one single large table file. As we will generate large quantities of data, creating only one table is the preferred choice since it is more suitable for big data processing. In fact, as of now, two of these tables have already been loaded into a hadoop distributed file system, making further analyses possible. Subsequently, a column containing the simulation identifier needs to be added to the table structure to make differentiation between simulations possible. This leads to the final table structure shown in tables \ref{tab:datastructure} and \ref{tab:datastructure2}. Remember that there are 592,000 simulations for each track profile, therefore there must be 592,000 unique ids, each referencing the results of one simulation. Each simulation, in turn, has approximately 300 rows, the exact count determined by Simulink. The time-series objects have 41 columns for wagon output, and two columns for train output, respectively; all together, there are $3 \cdot 41 + 2 \cdot 2 + 6 = 133$ columns in one such file. It is worthy to note that even though there may be less than 40 wagons in one simulation, the wagon-specific time-series objects ($F_{b}$, $P_{bp}$ and $a$) will always have 41 columns, with the unused columns filled with zeros (Remember that in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, it was stated output for unwanted wagons is set to zero values).
+One is now presented with two choices: Either write a new table file for every simulation (i.e. have hundreds of thousands of small files), or write everything into one single large table file. As we will generate large quantities of data, creating only one table is the preferred choice since it is more suitable for big data processing. In fact, as of now, two of these tables have already been loaded into a hadoop distributed file system, making further analyses possible. Subsequently, a column containing the simulation identifier needs to be added to the table structure to make differentiation between simulations possible. This leads to the final table structure shown in tables \ref{tab:datastructure} and \ref{tab:datastructure2}. Remember that there are 592,000 simulations for each track profile, therefore there must be 592,000 unique ids, each referencing the results of one simulation. Each simulation, in turn, has approximately 1100 rows, the exact count determined by Simulink. The time-series objects have 41 columns for wagon output, and two columns for train output, respectively; all together, there are $3 \cdot 41 + 2 \cdot 2 + 6 = 133$ columns in one such file. It is worthy to note that even though there may be less than 40 wagons in one simulation, the wagon-specific time-series objects ($F_{b}$, $P_{bp}$ and $a$) will always have 41 columns, with the unused columns filled with zeros (Remember that in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}, it was stated output for unwanted wagons is set to zero values).
 \par
-One parameter, however, is still missing from the table: The track profile. It is a vector of the following structure:
+One parameter, however, is still missing from the table: The track profile. It is a vector of the structure illustrated in table \ref{tab:trackprofile}:
 
 \bigskip
-\begin{table}[H]
+\begin{table}[htb!]
 	\centering
 	\begin{tabular}{*{2}{c}}\toprule
 		\# & $v_{max}$ \\ \midrule
@@ -269,9 +269,32 @@ One parameter, however, is still missing from the table: The track profile. It i
 \noindent
 The first column (\#) is the index for the data points, and the second column is the corresponding value for maximum velocity $v_{max}$ at this particular point in time. A few choices present themselves of how to add to the output table. It could be added to every simulation; this would lead to massive overhead, however, since $\sim$6900 rows would need to be filled for every single simulation. Furthermore, it is unnecessary to add the track profile to every simulation, since it does not change, compared to varying input parameters like the number of wagons. Therefore, one might either write the vector once, to the end of the table, or write it to a separate file. Appending it to the end of the table still leads to slight overhead in terms of disk space, since for each simulation, two additional columns would need to be filled with zeros; also, this would lead to the last 7199 rows of the output table having different semantics than the previous entries, which would need to be highlighted somehow. The easiest approach, which has been chosen accordingly, is therefore writing the track profile to a separate file, which can then be linked to the output table further down the line.
 
-\section{Analysis of generated Data}
+\section{Analysis of Generated Data}
 \label{sec:AnalysisOfGeneratedData}
-\TODO{}
+\par\noindent
+Now, with a plenitude of data available, some statistical analyses may be carried out. It was mentioned previously that not all simulation runs have the same number of output lines, so it might be interesting to know the average line count per simulation, as well as the minimum and maximum. Since all data is now stored in the Hadoop distributed file system, we can use Apache Drill to operate on it:
+
+\begin{figure}[htb!]
+	\centering
+	\includegraphics[width=\linewidth]{./pic/query_avg_lines}
+\end{figure}
+
+We may also want to use this opportunity to validate some of our previous assumptions postulated in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}. For instance, we established a relation between friction coefficient and braking force $R_{\mu,F_{b}}:\mu \propto F_{b}$. Using exemplary data from five wagons, we can see this is indeed the case:
+
+\begin{figure}[htb!]
+	\centering
+	\includegraphics[width=\linewidth]{./pic/query_fc_fb}
+\end{figure}
+
+The same can be done for the relation between braking force and acceleration $R_{F_{b},a}:a \propto F_{b}$. Again, using exemplary data from five wagons, we can see that higher values of applied braking force result in stronger deceleration:
+
+\begin{figure}[htb!]
+	\centering
+	\includegraphics[width=\linewidth]{./pic/query_fb_a}
+\end{figure}
+
+This can be done for any such relations previously proposed. 
+
 \section{Performance}
 \label{sec:Performance}
 \par\noindent
