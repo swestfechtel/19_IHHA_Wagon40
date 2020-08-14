@@ -116,7 +116,7 @@ Obviously, the train brake ${\mathcal{M}}_{B}$ relates to $F_{B}$ as it is the a
 \par
 Furthermore, the wagon mass $m$ relates to $F_{B}$ as well. The vehicle mass is proportional to the kinetic energy to dissipate during braking actions. The larger $m$ is, the more kinetic energy ($E=\frac{1}{2} \cdot m \cdot v^{2}$), and thus the higher the required braking force to slow the train down. As the vehicle mass varies, so must the applied braking force in order to avoid wheel slip and locking of the wheels which occurs if too much force is applied (\cite{Cruceanu2012}, p.47). We can therefore denote $m \propto F_{b}$, and subsequently define a relation $R_{m,F_{b}}: m \propto F_{b}$.
 \par
-The braking deceleration $a$, neglecting other resistances, is influenced by two factors: The applied braking force $F_{b}$, and the vehicle's mass $m$. As per Newton's second law of motion, $F=m \cdot a$, so $a=\frac{F_{b}}{m}$ [train braking, 23]. In practice, this means the braking force is directly proportional to the braking deceleration, and the vehicle mass is inversely proportional to $a$, not taking into consideration wheel slip. We can therefore denote $F_{b} \propto a$, and $m \sim a$, and subsequently define two relations $R_{F_{b},a}: F_{b} \propto a$, and $R_{m,a}: m \sim a$.
+The braking deceleration $a$, neglecting other resistances, is influenced by two factors: The applied braking force $F_{b}$, and the vehicle's mass $m$. As per Newton's second law of motion, $F=m \cdot a$, so $a=\frac{F_{b}}{m}$ (\cite{Cruceanu2012}, p.51). In practice, this means the braking force is directly proportional to the braking deceleration, and the vehicle mass is inversely proportional to $a$, not taking into consideration wheel slip. We can therefore denote $F_{b} \propto a$, and $m \sim a$, and subsequently define two relations $R_{F_{b},a}: F_{b} \propto a$, and $R_{m,a}: m \sim a$.
 \par
 Finally, the braking distance $d$ is also dependent on two factors: The running speed $v$, and the braking deceleration $a$.  We have 
 
@@ -142,7 +142,7 @@ To recapitulate, ${\mathcal{M}}$ is a model for the braking process. Having hand
 	\item The wheel/rail friction coefficient, denoted as $\mu$
 \end{itemize}
 \noindent
-As shown earlier, the braking deceleration has a substantial influence on the braking process, namely on the braking distance and on the stopping time (see equation \ref{eq:brakingdistance}). So far, the deceleration was only related to vehicle mass $m$ and applied braking force $F_{b}$, both being internal relations. However, the track gradient, also has an influence on $a$. As the train goes uphill, the deceleration increases; as it goes downhill, it decreases, due to gravity. A simple formula might look like this:
+As shown earlier, the braking deceleration has a substantial influence on the braking process, namely on the braking distance and on the stopping time (see equation \ref{eq:brakingdistance}). So far, the deceleration was only related to vehicle mass $m$ and applied braking force $F_{b}$, both being internal relations. However, the track gradient also has an influence on $a$. As the train goes uphill, the deceleration increases; as it goes downhill, it decreases, due to gravity. A simple formula might look like this:
 
 \begin{equation}
 \label{eq:deceleration}
@@ -189,7 +189,7 @@ So far, we have looked at the braking process from a static point of view. Howev
 Remember how we have defined the model. It is a set comprising of a number of subsets; but it describes a system, in this case the braking process of a train. This means that the model variables, i.e. the elements of ${\mathcal{V}}$, are subject to change as the process progresses. This can be expressed by another equation, in form of a function $f$:
 
 \begin{align*}
-\{ V \} &= f( {\mathcal{M}} ) \\
+{\mathcal{V}} &= f( {\mathcal{M}} ) \\
 		&= f( {\mathcal{V}}, {\mathcal{R}}, {\mathcal{C}} )
 \end{align*}
 
@@ -201,7 +201,7 @@ This suffices to determine the system's state before and after a relation has ch
 \end{align*}
 
 \noindent
-This allows for the calculation of the rate of change for any given point in time. By integrating the equation, one can also obtain the actual values of the elements of ${\mathcal{V}}$, e.g. the value of $v$ for $t=120$. The function $f$ is one, or a set of, differential equations. In practice, these are automatically generated and calculated by Simulink.
+This allows for the calculation of the rate of change for any given point in time. By integrating the equation, one can also obtain the actual values of the elements of ${\mathcal{V}}$, e.g. the value of $v$ for $t=120$. The function $f$ is one, or a set of, differential equations. In practice, these are automatically generated and calculated by Simulink, so we need not be concerned with their exact definition at this point.
 \bigskip
 \par\noindent
 We have now laid all the necessary groundwork to build a functioning model of the braking process, which can then be used for simulation and data generation. The next chapter will deal with this.

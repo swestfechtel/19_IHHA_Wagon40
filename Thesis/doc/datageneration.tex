@@ -45,7 +45,7 @@ c = 250;
 \bigskip
 
 \noindent
-These constants all correspond to the brake pipe ${\mathcal{M}}_{bp}$, where \pyth{RBD} is the regular operations pressure (i.e. the pressure on the brake pipe when brakes are disengaged), \pyth{VBD} is the full breaking pressure (i.e. the pressure on the brake pipe when brakes are fully engaged), \pyth{l} is the physical length of the brake pipe $l_{bp}$ (although $l_{bp}$ is defined as a variable in ${\mathcal{M}}_{bp}$, it is assumed all wagons have the same physical length for the sake of simplicity), and \pyth{c} is the propagation velocity of the pipe's medium $v_{bp}$.
+These constants all correspond to the brake pipe ${\mathcal{M}}_{bp}$, where \pyth{RBD} is the regular operating pressure (i.e. the pressure on the brake pipe when brakes are disengaged), \pyth{VBD} is the full breaking pressure (i.e. the pressure on the brake pipe when brakes are fully engaged), \pyth{l} is the physical length of the brake pipe $l_{bp}$ (although $l_{bp}$ is defined as a variable in ${\mathcal{M}}_{bp}$, it is assumed all wagons have the same physical length for the sake of simplicity), and \pyth{c} is the propagation velocity of the pipe's medium $v_{bp}$.
 
 %\bigskip
 %\begin{python}
@@ -204,7 +204,7 @@ The \pyth{Write()} function takes all output parameters of a single simulation f
 \bigskip
 
 \noindent
-For one simulation, all time-series objects have the line count, as well as the same timestamps, so it suffices to store the corresponding properties of one time-series object, using \pyth{numrows = get(force,'Length');} and \pyth{time = force.Time;}, respectively. An empty matrix is then created using \pyth{matrix = [];} which will store all output parameters. A for-loop is used to iterate over the time-series objects, creating a vector for each \pyth{row} that contains the simulation ID, the timestamp for the current row, the column values of all time-series objects for the current row, the wagon IDs, the track gradient, the traction force, and the wheel/rail friction coefficient. This vector is then appended to the overall matrix. After the for-loop has elapsed, the \pyth{matrix} object gets returned.
+For one simulation, all time-series objects have the same line count, as well as the same timestamps, so it suffices to store the corresponding properties of one time-series object, using \pyth{numrows = get(force,'Length');} and \pyth{time = force.Time;}, respectively. An empty matrix is then created using \pyth{matrix = [];} which will store all output parameters. A for-loop is used to iterate over the time-series objects, creating a vector for each \pyth{row} that contains the simulation ID, the timestamp for the current row, the column values of all time-series objects for the current row, the wagon IDs, the track gradient, the traction force, and the wheel/rail friction coefficient. This vector is then appended to the overall matrix. After the for-loop has elapsed, the \pyth{matrix} object gets returned.
 
 \section{Data Structure}
 \label{sec:DataStructure}
@@ -267,33 +267,40 @@ One parameter, however, is still missing from the table: The track profile. It i
 \end{table}
 
 \noindent
-The first column (\#) is the index for the data points, and the second column is the corresponding value for maximum velocity $v_{max}$ at this particular point in time. A few choices present themselves of how to add to the output table. It could be added to every simulation; this would lead to massive overhead, however, since $\sim$6900 rows would need to be filled for every single simulation. Furthermore, it is unnecessary to add the track profile to every simulation, since it does not change, compared to varying input parameters like the number of wagons. Therefore, one might either write the vector once, to the end of the table, or write it to a separate file. Appending it to the end of the table still leads to slight overhead in terms of disk space, since for each simulation, two additional columns would need to be filled with zeros; also, this would lead to the last 7199 rows of the output table having different semantics than the previous entries, which would need to be highlighted somehow. The easiest approach, which has been chosen accordingly, is therefore writing the track profile to a separate file, which can then be linked to the output table further down the line.
+The first column (\#) is the index for the data points, and the second column is the corresponding value for maximum velocity $v_{max}$ at this particular point in time. A few choices present themselves of how to add this to the output table. It could be added to every simulation; this would lead to massive overhead, however, since $\sim$6900 rows would need to be filled for every single simulation. Furthermore, it is unnecessary to add the track profile to every simulation, since it does not change, compared to varying input parameters like the number of wagons. Therefore, one might either write the vector once, to the end of the table, or write it to a separate file. Appending it to the end of the table still leads to slight overhead in terms of disk space, since for each simulation, two additional columns would need to be filled with zeros; also, this would lead to the last 7199 rows of the output table having different semantics than the previous entries, which would need to be highlighted somehow. The easiest approach, which has been chosen accordingly, is therefore writing the track profile to a separate file, which can then be linked to the output table further down the line.
 
 \section{Analysis of Generated Data}
 \label{sec:AnalysisOfGeneratedData}
 \par\noindent
-Now, with a plenitude of data available, some statistical analyses may be carried out. It was mentioned previously that not all simulation runs have the same number of output lines, so it might be interesting to know the average line count per simulation, as well as the minimum and maximum. Since all data is now stored in the Hadoop distributed file system, we can use Apache Drill to operate on it:
+Now, with a plenitude of data available, some statistical analyses may be carried out. It was mentioned previously that not all simulation runs have the same number of output lines, so it might be interesting to know the average line count per simulation, as well as the minimum and maximum. Since all data is now stored in the Hadoop distributed file system, we can use Apache Drill to operate on it.
 
 \begin{figure}[htb!]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/query_avg_lines}
 \end{figure}
 
-We may also want to use this opportunity to validate some of our previous assumptions postulated in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}. For instance, we established a relation between friction coefficient and braking force $R_{\mu,F_{b}}:\mu \propto F_{b}$. Using exemplary data from five wagons, we can see this is indeed the case:
+We may also want to use this opportunity to validate some of our previous assumptions postulated in chapter \ref{chap:FundamentalsOfRailwayVehicleEngineering}. For instance, we established a relation between friction coefficient and braking force $R_{\mu,F_{b}}:\mu \propto F_{b}$. Using exemplary data from five wagons, we can see this is indeed the case.
 
 \begin{figure}[htb!]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/query_fc_fb}
 \end{figure}
 
-The same can be done for the relation between braking force and acceleration $R_{F_{b},a}:a \propto F_{b}$. Again, using exemplary data from five wagons, we can see that higher values of applied braking force result in stronger deceleration:
+The same can be done for the relation between braking force and acceleration $R_{F_{b},a}:a \propto F_{b}$. Again, using exemplary data from five wagons, we can see that higher values of applied braking force result in stronger deceleration.
 
 \begin{figure}[htb!]
 	\centering
 	\includegraphics[width=\linewidth]{./pic/query_fb_a}
 \end{figure}
 
-This can be done for any such relations previously proposed. 
+This can be done for any such relations previously proposed. Another aspect to look at is how the train's velocity over the course of the simulation $v_{real}$ compares to the maximum velocity $v_{max}$ stipulated by the track profile. Figure \ref{fig:vmaxvsvreal} shows the visualized data for an exemplary simulation run. 
+
+\begin{figure}[htb!]
+	\centering
+	\includegraphics[width=\linewidth]{./pic/vmax_vs_vreal}
+	\caption{Comparison between $v_{max}$ and $v_{real}$}
+	\label{fig:vmaxvsvreal}
+\end{figure}
 
 \section{Performance}
 \label{sec:Performance}
