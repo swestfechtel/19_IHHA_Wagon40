@@ -24,5 +24,5 @@ columns.append('gradient')
 columns.append('Ft')
 columns.append('fc')
 
-df = pd.read_csv('output/output.tsv', names=columns, memory_map=True)
+df = pd.read_csv('output/output.tsv', names=columns, memory_map=False)
 df.info(verbose=True)

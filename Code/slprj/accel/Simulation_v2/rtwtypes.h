@@ -1,4 +1,3 @@
-#include "__cf_Simulation_v2.h"
 #ifndef RTWTYPES_H
 #define RTWTYPES_H
 #include "tmwtypes.h"

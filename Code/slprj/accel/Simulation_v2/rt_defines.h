@@ -1,4 +1,3 @@
-#include "__cf_Simulation_v2.h"
 #ifndef RTW_HEADER_rt_defines_h_
 #define RTW_HEADER_rt_defines_h_
 #define RT_PI          3.14159265358979323846

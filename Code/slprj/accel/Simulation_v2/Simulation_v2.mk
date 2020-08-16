@@ -81,16 +81,16 @@ MODEL                   = Simulation_v2
 MODULES                 = 
 PRODUCT                 = $(RELATIVE_PATH_TO_ANCHOR)\Simulation_v2_acc.mexw64
 MAKEFILE                = Simulation_v2.mk
-MATLAB_ROOT             = F:\Program Files\MATLAB\R2019b
-ALT_MATLAB_ROOT         = F:\PROGRA~2\MATLAB\R2019b
-MATLAB_BIN              = F:\Program Files\MATLAB\R2019b\bin
-ALT_MATLAB_BIN          = F:\PROGRA~2\MATLAB\R2019b\bin
+MATLAB_ROOT             = F:\Program Files\MATLAB\R2020a
+ALT_MATLAB_ROOT         = F:\PROGRA~2\MATLAB\R2020a
+MATLAB_BIN              = F:\Program Files\MATLAB\R2020a\bin
+ALT_MATLAB_BIN          = F:\PROGRA~2\MATLAB\R2020a\bin
 MASTER_ANCHOR_DIR       = 
 START_DIR               = F:\BA_Sim\19_IHHA_Wagon40\Code
 S_FUNCTIONS_LIB         = 
 NUMST                   = 3
 NCSTATES                = 82
-BUILDARGS               = 
+BUILDARGS               =  OPTS="-DTID01EQ=0"
 MULTITASKING            = 0
 INTEGER_CODE            = 0
 MAT_FILE                = 0
@@ -109,7 +109,7 @@ OPTIMIZATION_FLAGS      = /DNDEBUG /Od /Oy-
 ADDITIONAL_LDFLAGS      = 
 INTERLEAVED_COMPLEX_FLAGS = -R2018a
 DEFINES_CUSTOM          = 
-SYSTEM_LIBS             = /LIBPATH:"F:\Program Files\MATLAB\R2019b\extern\lib\win64\microsoft" libmwipp.lib libut.lib libmwmathutil.lib libmwsl_simtarget_instrumentation.lib libmwsl_simtarget_core.lib libmwsl_fileio.lib libmwsigstream.lib libmwslexec_simlog.lib libmwsl_AsyncioQueue.lib sf_runtime.lib libmwsimulink.lib libmwslexec_simbridge.lib libmwstringutil.lib libmwslio_core.lib libmwslio_clients.lib libmwsl_services.lib
+SYSTEM_LIBS             = /LIBPATH:"F:\Program Files\MATLAB\R2020a\extern\lib\win64\microsoft" libmwipp.lib libut.lib libmwmathutil.lib libmwsl_simtarget_instrumentation.lib libmwsl_simtarget_core.lib libmwsl_fileio.lib libmwsigstream.lib libmwslexec_simlog.lib libmwsl_AsyncioQueue.lib sf_runtime.lib libmwsimulink.lib libmwslexec_simbridge.lib libmwstringutil.lib libmwslio_core.lib libmwslio_clients.lib libmwsl_services.lib
 MODEL_HAS_DYNAMICALLY_LOADED_SFCNS = 0
 
 # To enable debugging:

@@ -1,4 +1,3 @@
-#include "__cf_Simulation_v2.h"
 #ifndef RTW_HEADER_Simulation_v2_acc_types_h_
 #define RTW_HEADER_Simulation_v2_acc_types_h_
 #include "rtwtypes.h"

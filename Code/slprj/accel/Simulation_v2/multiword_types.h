@@ -1,4 +1,3 @@
-#include "__cf_Simulation_v2.h"
 #ifndef MULTIWORD_TYPES_H
 #define MULTIWORD_TYPES_H
 #include "rtwtypes.h"

@@ -1,4 +1,3 @@
-#include "__cf_Simulation_v2.h"
 #include "rtGetNaN.h"
 #define NumBitsPerChar  8U
 real_T rtGetNaN ( void ) { size_t bitsPerReal = sizeof ( real_T ) * (
